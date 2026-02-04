@@ -2,6 +2,33 @@
 
 > Security analysis for developers integrating proof.holdings
 
+## TL;DR
+
+proof.holdings verifies **control of digital assets** (phone, email, domain, wallet) without revealing identity. We issue signed proof tokens (RS256 JWT) that can be verified offline via JWKS.
+
+**Key security properties:**
+- Reverse OTP model (user sends to us, not vice versa)
+- Constant-time challenge comparison (timing attack resistant)
+- Asymmetric signatures (private key never leaves server)
+- 13 threat categories actively mitigated
+
+**What we don't do:** Identity verification, KYC, fraud prevention, permanent records.
+
+---
+
+## Table of Contents
+
+- [What is proof.holdings?](#what-is-proofholdings)
+- [Security Properties](#security-properties)
+- [Threat Analysis](#threat-analysis)
+  - [Threats We Protect Against](#threats-we-protect-against)
+  - [Threats We Do NOT Protect Against](#threats-we-do-not-protect-against)
+- [Explicit Non-Goals](#explicit-non-goals)
+- [Security Recommendations for Integrators](#security-recommendations-for-integrators)
+- [Cryptographic Details](#cryptographic-details)
+- [Incident Response](#incident-response)
+- [Version History](#version-history)
+
 ---
 
 ## What is proof.holdings?
@@ -133,6 +160,46 @@ It is NOT:
 - Rate limiting per tenant and per IP
 
 **Residual risk:** Distributed attacks at Cloudflare scale.
+
+#### 10. Server-Side Request Forgery (SSRF)
+**Traditional vulnerability:** Attacker tricks server into making requests to internal resources.
+
+**Our mitigation:**
+- URL validation blocks localhost, 127.0.0.1, private IP ranges
+- Blocks .local, .internal, .localhost domains
+- Webhook URLs validated before delivery
+
+**Residual risk:** DNS rebinding attacks (mitigated by short TTL).
+
+#### 11. Path Traversal & Probing
+**Traditional vulnerability:** Attacker probes for sensitive files (.git, .env, admin panels).
+
+**Our mitigation:**
+- Nginx WAF blocklist (40+ attack patterns)
+- Blocks: .git, .env, wp-admin, phpmyadmin, .sql, shell paths
+- Auto-blocking of repeat offenders (IP escalation to firewall)
+
+**Residual risk:** Zero-day paths not in blocklist.
+
+#### 12. Session Hijacking
+**Traditional vulnerability:** Attacker reuses stolen JWT tokens.
+
+**Our mitigation:**
+- JWT blacklist checked on every request (Redis-backed)
+- Logout invalidates token immediately
+- Short token expiry with refresh rotation
+
+**Residual risk:** Token valid until next Redis check (milliseconds).
+
+#### 13. Clickjacking & XSS
+**Traditional vulnerability:** Attacker embeds site in iframe or injects scripts.
+
+**Our mitigation:**
+- Helmet.js security headers (X-Frame-Options: DENY, X-Content-Type-Options: nosniff)
+- Strict CORS (production locked to https://proof.holdings)
+- Content-Security-Policy headers
+
+**Residual risk:** Browser without header support (rare, legacy).
 
 ---
 
@@ -271,6 +338,22 @@ Output: 64-character hex string
 Purpose: Privacy — raw identifier not in token
 ```
 
+### BYOC Credential Encryption
+```
+Algorithm: AES-256-GCM
+Key derivation: PBKDF2 with 100,000 iterations
+Purpose: Encrypt bring-your-own-credentials (Twilio, SendGrid, etc.) at rest
+Note: Each tenant's credentials encrypted with unique derived key
+```
+
+### Wallet Address Validation
+```
+Ethereum: 0x + 40 hex characters (checksum validated)
+Solana: Base58, 32-44 characters
+Bitcoin: Legacy (1...), P2SH (3...), Bech32 (bc1...)
+Purpose: Reject malformed addresses before verification attempt
+```
+
 ### Webhook Signatures
 ```
 Algorithm: HMAC-SHA256
@@ -303,9 +386,18 @@ Note: Production warns if webhook secret not configured — receivers cannot ver
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.2 | 2026-02-04 | Added: SSRF protection, WAF blocklist, session hijacking, clickjacking/XSS, BYOC encryption, wallet validation, TL;DR, TOC, related docs |
 | 1.1 | 2026-02-04 | Added: exponential backoff, request size limits, DoS protection, HSTS preload |
 | 1.0 | 2026-02-04 | Initial threat model |
 
 ---
 
 *This document is intended for developers integrating proof.holdings. For security researchers, please report vulnerabilities to hello@proof.holdings.*
+
+---
+
+## Related Documentation
+
+- [API Reference](https://proof.holdings/docs/api) — Endpoints, authentication, webhooks
+- [Integration Guide](https://proof.holdings/docs/integration) — Quick start, SDKs, examples
+- [Pricing](https://proof.holdings/pricing) — Plans and verification limits
