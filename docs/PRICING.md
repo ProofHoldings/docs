@@ -18,29 +18,17 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ## Plans
 
-### Free
-**€0/month**
-
-- 1,000 proofs/month
-- All verification types (phone, email, domain)
-- Unlimited API access
-- Test mode included
-- Community support
-
-*Perfect for: Testing, side projects, getting started*
-
----
-
 ### Pay As You Go
-**€0.03/proof**
+**€0.03/proof** (first 1,000 proofs/month free)
 
 - No monthly fee
 - No commitment
-- All verification types
-- Unlimited API access
+- All verification types (phone, email, domain)
+- Unlimited API calls
+- Test mode included
 - Email support
 
-*Perfect for: Variable usage, early-stage startups*
+*Perfect for: Testing, side projects, variable usage, early-stage startups*
 
 ---
 
@@ -66,7 +54,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - **€0.0079/proof effective rate**
 - All verification types
 - Webhooks
-- Custom branding (co-branded experience)
+- Custom branding (your business name, logo, colors in messages)
 - Bring your own phone numbers (BYOC)
 - Priority support
 
@@ -86,23 +74,40 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ---
 
+## Custom Branding (Business Plan)
+
+All plans use shared infrastructure (`@proof_holdings_bot` on Telegram, shared phone numbers).
+
+**Custom branding** lets users see YOUR context:
+
+| Element | Without Branding | With Branding |
+|---------|------------------|---------------|
+| Business name | "Proof of Holdings" | "Your Company Name" |
+| Email logo | proof.holdings logo | Your logo |
+| Email colors | Default blue | Your brand colors |
+| Support email | support@proof.holdings | support@yourcompany.com |
+| Message templates | Default text | Custom text |
+
+The verification endpoint remains `@proof_holdings_bot`, but messages show your branding.
+
+---
+
 ## Cost Comparison
 
 ### Per-Verification Cost
 
-| Volume | Free | PAYG | Pro | Business | SMS (Twilio) |
-|--------|------|------|-----|----------|--------------|
-| 1,000 | €0 | €30 | €29 | €79 | $50-400 |
-| 3,000 | - | €90 | €29 | €79 | $150-1,200 |
-| 10,000 | - | €300 | €204 | €79 | $500-4,000 |
-| 50,000 | - | €1,500 | €1,204 | €879 | $2,500-20,000 |
+| Volume | PAYG | Pro | Business | SMS (Twilio) |
+|--------|------|-----|----------|--------------|
+| 1,000 | €0 (free tier) | €29 | €79 | $50-400 |
+| 3,000 | €60 | €29 | €79 | $150-1,200 |
+| 10,000 | €270 | €204 | €79 | $500-4,000 |
+| 50,000 | €1,470 | €1,204 | €879 | $2,500-20,000 |
 
 ### Effective Rate at Volume
 
 | Plan | Included | Rate After | Effective at 10K |
 |------|----------|------------|------------------|
-| Free | 1,000 | - | - |
-| PAYG | 0 | €0.03 | €0.03 |
+| PAYG | 1,000 | €0.03 | €0.027 |
 | Pro | 3,000 | €0.025 | €0.0204 |
 | Business | 10,000 | €0.02 | **€0.0079** |
 
@@ -139,18 +144,16 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ---
 
-## Channels by Plan
+## Features by Plan
 
-| Channel | Free | PAYG | Pro | Business |
-|---------|------|------|-----|----------|
-| Telegram | ✅ | ✅ | ✅ | ✅ |
-| WhatsApp | ✅ | ✅ | ✅ | ✅ |
-| SMS | ✅ | ✅ | ✅ | ✅ |
-| Email | ✅ | ✅ | ✅ | ✅ |
-| DNS | ✅ | ✅ | ✅ | ✅ |
-| HTTP | ✅ | ✅ | ✅ | ✅ |
-| Custom branding | ❌ | ❌ | ❌ | ✅ |
-| Own phone numbers (BYOC) | ❌ | ❌ | ❌ | ✅ |
+| Feature | PAYG | Pro | Business |
+|---------|------|-----|----------|
+| All channels (Telegram, WhatsApp, SMS, Email, DNS, HTTP) | ✅ | ✅ | ✅ |
+| Webhooks | ✅ | ✅ | ✅ |
+| Custom branding (business name, logo, colors) | ❌ | ❌ | ✅ |
+| Custom message templates | ❌ | ❌ | ✅ |
+| Own phone numbers (BYOC) | ❌ | ❌ | ✅ |
+| Priority support | ❌ | ✅ | ✅ |
 
 ---
 
@@ -168,11 +171,11 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ### Do unused proofs roll over?
 - No, included proofs reset monthly
-- PAYG has no expiration
+- PAYG overage has no expiration
 
 ### Is there a free trial?
-- Free plan is forever free (1,000/month)
-- No credit card required
+- PAYG includes 1,000 free proofs/month
+- No credit card required to start
 
 ---
 
@@ -198,13 +201,13 @@ Business plan:
 Includes: All channels, offline verification, webhooks, audit trail
 ```
 
-**Same security. Better features. 10-50x cheaper.**
+**Same security. Better features. 10-50x lower cost.**
 
 ---
 
 ## Getting Started
 
-1. **Sign up free** - No credit card required
+1. **Sign up** - No credit card required
 2. **Get API key** - Instant access
 3. **Make first verification** - Takes 2 minutes
 4. **Upgrade when ready** - Keep your data, change plan
