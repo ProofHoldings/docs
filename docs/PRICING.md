@@ -55,7 +55,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - All verification types
 - Webhooks
 - Custom branding (your business name, logo, colors in messages)
-- Bring your own phone numbers (BYOC)
+- BYOC (your own Telegram bot, WhatsApp, Email, SMS)
 - Priority support
 
 *Perfect for: Scale-ups, SaaS platforms*
@@ -76,19 +76,35 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ## Custom Branding (Business Plan)
 
-All plans use shared infrastructure (`@proof_holdings_bot` on Telegram, shared phone numbers).
+**Default (all plans):** Shared infrastructure
+- `@proof_holdings_bot` on Telegram
+- Shared WhatsApp number
+- Emails from proof.holdings
 
-**Custom branding** lets users see YOUR context:
+**Custom branding** lets users see YOUR context in messages:
 
-| Element | Without Branding | With Branding |
-|---------|------------------|---------------|
+| Element | Shared | Custom Branding |
+|---------|--------|-----------------|
 | Business name | "Proof of Holdings" | "Your Company Name" |
 | Email logo | proof.holdings logo | Your logo |
 | Email colors | Default blue | Your brand colors |
 | Support email | support@proof.holdings | support@yourcompany.com |
 | Message templates | Default text | Custom text |
 
-The verification endpoint remains `@proof_holdings_bot`, but messages show your branding.
+---
+
+## BYOC - Bring Your Own Channels (Business Plan)
+
+Full channel ownership - users interact with YOUR endpoints:
+
+| Channel | Shared | BYOC |
+|---------|--------|------|
+| Telegram | `@proof_holdings_bot` | `@your_company_bot` |
+| WhatsApp | Shared number | Your WhatsApp Business number |
+| Email | noreply@proof.holdings | noreply@yourcompany.com |
+| SMS | Shared number | Your phone number |
+
+BYOC = complete white-label experience. Users never see proof.holdings.
 
 ---
 
@@ -152,7 +168,7 @@ The verification endpoint remains `@proof_holdings_bot`, but messages show your 
 | Webhooks | ✅ | ✅ | ✅ |
 | Custom branding (business name, logo, colors) | ❌ | ❌ | ✅ |
 | Custom message templates | ❌ | ❌ | ✅ |
-| Own phone numbers (BYOC) | ❌ | ❌ | ✅ |
+| BYOC (your own Telegram bot, WhatsApp, Email, SMS) | ❌ | ❌ | ✅ |
 | Priority support | ❌ | ✅ | ✅ |
 
 ---
