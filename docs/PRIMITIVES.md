@@ -126,14 +126,14 @@ Server sends SMS to user  →  User enters code  →  Verified
 Reverse OTP (proof.holdings):
 ```
 Server shows code  →  User sends message TO server  →  Verified
-     (free)              (user-initiated = secure)
+     (low cost)          (user-initiated = secure)
 ```
 
 **Why it matters:**
-- Free (inbound messages cost nothing)
+- Low cost (Telegram/WhatsApp inbound is free; SMS inbound has carrier costs)
 - Secure (user initiates, can't be phished)
-- Reliable (no carrier delivery issues)
-- Private (we learn phone from message metadata)
+- Reliable (no carrier delivery issues for messaging apps)
+- Challenge code can be pre-populated via deep link (e.g., `https://t.me/bot?start=X7K2M9`)
 
 ---
 

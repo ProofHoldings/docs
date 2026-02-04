@@ -66,9 +66,8 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - **€0.0079/proof effective rate**
 - All verification types
 - Webhooks
-- Custom branding
-- Bring your own phone numbers
-- Dedicated support
+- Bring your own phone numbers (BYOC)
+- Priority support
 
 *Perfect for: Scale-ups, SaaS platforms*
 
@@ -80,12 +79,9 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - 100,000+ proofs/month
 - Volume discounts
 - Custom SLA
-- On-premise deployment option
 - Dedicated infrastructure
-- Custom integrations
-- 24/7 support
 
-*Contact: sales@proof.holdings*
+*Contact: hello@proof.holdings*
 
 ---
 
@@ -152,8 +148,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 | Email | ✅ | ✅ | ✅ | ✅ |
 | DNS | ✅ | ✅ | ✅ | ✅ |
 | HTTP | ✅ | ✅ | ✅ | ✅ |
-| Custom branding | ❌ | ❌ | ❌ | ✅ |
-| Own phone numbers | ❌ | ❌ | ❌ | ✅ |
+| Own phone numbers (BYOC) | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
@@ -169,10 +164,6 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - Downgrade at end of billing cycle
 - No penalties
 
-### What payment methods?
-- Credit/debit card (Stripe)
-- Invoice for Enterprise (NET 30)
-
 ### Do unused proofs roll over?
 - No, included proofs reset monthly
 - PAYG has no expiration
@@ -180,10 +171,6 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 ### Is there a free trial?
 - Free plan is forever free (1,000/month)
 - No credit card required
-
-### What about refunds?
-- Unused prepaid proofs refunded within 30 days
-- No refunds on usage-based charges
 
 ---
 
@@ -230,4 +217,4 @@ curl -X POST https://api.proof.holdings/api/v1/verifications \
 
 ---
 
-*Questions about pricing? Contact sales@proof.holdings*
+*Questions about pricing? Contact hello@proof.holdings*

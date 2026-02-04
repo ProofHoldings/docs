@@ -111,7 +111,7 @@ curl https://api.proof.holdings/.well-known/jwks.json
 
 ## DNS Provider Integrations
 
-Auto-DNS verification supports **53 providers**. [Full list →](integrations/dns-providers/README.md)
+Auto-DNS verification supports **48 providers**. [Full list →](integrations/dns-providers/README.md)
 
 **Global Leaders:** Cloudflare, GoDaddy, Route53, Google Cloud, Azure, DigitalOcean
 
@@ -119,7 +119,7 @@ Auto-DNS verification supports **53 providers**. [Full list →](integrations/dn
 
 **EU Regional:** Hetzner, TransIP, INWX, Netcup, Infomaniak, Domeneshop, Scaleway
 
-[See all 53 providers →](integrations/dns-providers/README.md)
+[See all 48 providers →](integrations/dns-providers/README.md)
 
 ---
 

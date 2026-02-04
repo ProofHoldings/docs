@@ -49,7 +49,7 @@ It is NOT:
 **Traditional OTP vulnerability:** Attacker intercepts SMS containing OTP code.
 
 **Our mitigation:** Reverse OTP — user sends code TO us, not from us. Attacker would need to:
-- Know the challenge code (displayed only to user)
+- Know the challenge code (displayed to user in your app UI)
 - Have control of user's device to send message
 - Complete within TTL window
 
@@ -280,7 +280,7 @@ Validation: Compare within 5-minute window
 
 ### Our Commitment
 
-- Security issues: Response within 24 hours
+- Security issues disclosed via hello@proof.holdings
 - Critical vulnerabilities: Immediate key rotation capability
 - Transparency: Public disclosure after fix (coordinated)
 
@@ -294,4 +294,4 @@ Validation: Compare within 5-minute window
 
 ---
 
-*This document is intended for developers integrating proof.holdings. For security researchers, please report vulnerabilities to security@proof.holdings.*
+*This document is intended for developers integrating proof.holdings. For security researchers, please report vulnerabilities to hello@proof.holdings.*
