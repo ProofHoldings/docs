@@ -230,11 +230,10 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 ### Traditional SMS Pricing
 
 ```
-Twilio:
-$0.0079/segment + carrier fees + phone number rental
-= $0.05-0.40 per verification
+SMS verification costs $0.05-0.50+ per message
+depending on country and carrier.
 
-At 10,000/month = $500-4,000
+At 10,000/month = $500-5,000+
 ```
 
 ### proof.holdings Pricing
