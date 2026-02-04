@@ -66,6 +66,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - **€0.0079/proof effective rate**
 - All verification types
 - Webhooks
+- Custom branding (co-branded experience)
 - Bring your own phone numbers (BYOC)
 - Priority support
 
@@ -148,6 +149,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 | Email | ✅ | ✅ | ✅ | ✅ |
 | DNS | ✅ | ✅ | ✅ | ✅ |
 | HTTP | ✅ | ✅ | ✅ | ✅ |
+| Custom branding | ❌ | ❌ | ❌ | ✅ |
 | Own phone numbers (BYOC) | ❌ | ❌ | ❌ | ✅ |
 
 ---
