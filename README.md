@@ -1,8 +1,8 @@
-# proof.holdings
+# proof.holdings - Multi-Surface Proof of Control
 
 **Cryptographic proofs of digital asset control.**
 
-proof.holdings issues signed JWT proofs that a user controls a digital asset (phone, email, domain, wallet) by completing a challenge from that asset. Proofs are offline-verifiable using RS256 public keys.
+proof.holdings issues signed JWT proofs that a user controls a digital asset (phone, email, domain, social, wallet) by completing a challenge from that asset. Proofs are offline-verifiable using RS256 public keys.
 
 [![API Status](https://img.shields.io/badge/API-Live-brightgreen)](https://api.proof.holdings/health)
 [![JWKS](https://img.shields.io/badge/JWKS-RS256-blue)](https://api.proof.holdings/.well-known/jwks.json)
