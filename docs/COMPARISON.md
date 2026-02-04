@@ -139,7 +139,7 @@ Server shows code → User sends message TO server → Verified → Signed proof
 
 **Pros:**
 - User-initiated (secure by design)
-- Free inbound messages
+- Low cost (Telegram/WhatsApp inbound is free; SMS has carrier costs)
 - Offline-verifiable proofs (RS256)
 - Multi-asset (phone, email, domain, social, wallet)
 - Portable proofs (reuse across systems)
@@ -173,7 +173,7 @@ Server shows code → User sends message TO server → Verified → Signed proof
 | Provider | Method | Cost |
 |----------|--------|------|
 | Twilio SMS | A2P SMS | $5,000-40,000 |
-| **proof.holdings** | Reverse OTP | **€2,000** (Enterprise) |
+| **proof.holdings** | Reverse OTP | **Custom pricing** (Enterprise) |
 
 **€79/month for what costs $1,000+ with SMS.**
 
@@ -291,7 +291,7 @@ const verification = await fetch('https://api.proof.holdings/api/v1/verification
 
 | If you need... | Use... |
 |----------------|--------|
-| Cheapest phone verification | proof.holdings |
+| Cost-effective phone verification | proof.holdings |
 | Offline-verifiable proofs | proof.holdings |
 | Multi-asset verification | proof.holdings |
 | Legacy SMS compliance | Twilio/SMS |
@@ -300,4 +300,4 @@ const verification = await fetch('https://api.proof.holdings/api/v1/verification
 
 ---
 
-*Questions? security@proof.holdings*
+*Questions? hello@proof.holdings*

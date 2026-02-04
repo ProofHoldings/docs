@@ -2,7 +2,7 @@
 
 Auto-DNS verification allows instant domain verification by automatically creating TXT records via provider APIs. No manual DNS configuration required.
 
-**53 providers supported.**
+**48 providers supported.**
 
 ---
 
@@ -85,12 +85,24 @@ Auto-DNS verification allows instant domain verification by automatically creati
 
 | Provider | Auth Type | Rate Limit | Notes |
 |----------|-----------|------------|-------|
-| [Hurricane Electric](he.md) | Session + TOTP | 10/min | Requires TOTP |
+| [Hurricane Electric](he.md) | Session + DDNS Key | 10/min | Session-based |
 | [PowerDNS](powerdns.md) | API Key | Varies | Self-hosted |
 | [Dynu](dynu.md) | API Key | 100/min | Free DNS |
 | [Mythic Beasts](mythic-beasts.md) | API Key | 100/min | UK |
 | [Selectel](selectel.md) | API Key | 60/min | Russia |
-| [Rackspace](rackspace.md) | API Key | 100/min | |
+| [Rackspace](rackspace.md) | Username + API Key | 100/min | |
+| [Yandex Cloud](yandexcloud.md) | IAM/OAuth Token | 100/min | Russia |
+| [Exoscale](exoscale.md) | API Key + Secret | 100/min | Swiss |
+| [easyDNS](easydns.md) | API Token + Key | 100/min | |
+| [Dyn](dyn.md) | Session-based | 100/min | Oracle |
+| [DNSPod](dnspod.md) | Login Token | 100/min | Tencent China |
+| [Rage4](rage4.md) | Email + API Key | 100/min | |
+| [Zilore](zilore.md) | API Key | 100/min | |
+| [eNom](enom.md) | UID + Password | 100/min | Registrar |
+| [CentralNic](centralnic.md) | Username + Password | 100/min | Registrar |
+| [Hexonet](hexonet.md) | Username + Password | 100/min | Registrar |
+| [Dynadot](dynadot.md) | API Key | 100/min | Registrar |
+| [Aruba](aruba.md) | API Token | 100/min | Italian |
 
 ---
 
@@ -115,4 +127,4 @@ If API access unavailable:
 
 ## Adding New Providers
 
-Contact dev@proof.holdings to request additional provider support.
+Contact hello@proof.holdings to request additional provider support.
