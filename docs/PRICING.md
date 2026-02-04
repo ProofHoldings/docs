@@ -25,6 +25,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - No commitment
 - All verification types (phone, email, domain)
 - Unlimited API calls
+- Custom branding
 - Test mode included
 - Email support
 
@@ -39,6 +40,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - €0.025 per additional proof
 - **€0.0097/proof effective rate**
 - All verification types
+- Custom branding
 - Webhooks
 - Priority support
 
@@ -53,8 +55,8 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - €0.02 per additional proof
 - **€0.0079/proof effective rate**
 - All verification types
+- Custom branding
 - Webhooks
-- Custom branding (your business name, logo, colors in messages)
 - Priority support
 
 *Perfect for: Scale-ups, SaaS platforms*
@@ -89,9 +91,9 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ---
 
-## Custom Branding (Business & White-Label)
+## Custom Branding (All Plans)
 
-**Default (PAYG & Pro):** Shared infrastructure
+**All plans** include custom branding on shared infrastructure:
 - `@proof_holdings_bot` on Telegram
 - Shared WhatsApp and Viber numbers
 - Emails from proof.holdings
@@ -184,9 +186,9 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 | Feature | PAYG | Pro | Business | White-Label |
 |---------|------|-----|----------|-------------|
 | All channels (Telegram, WhatsApp, Viber, SMS, Email, DNS, HTTP) | ✅ | ✅ | ✅ | ✅ |
+| Custom branding (business name, logo, colors) | ✅ | ✅ | ✅ | ✅ |
+| Custom message templates | ✅ | ✅ | ✅ | ✅ |
 | Webhooks | ✅ | ✅ | ✅ | ✅ |
-| Custom branding (business name, logo, colors) | ❌ | ❌ | ✅ | ✅ |
-| Custom message templates | ❌ | ❌ | ✅ | ✅ |
 | BYOC (your own Telegram, WhatsApp, Viber, Email, SMS) | ❌ | ❌ | ❌ | ✅ |
 | Priority support | ❌ | ✅ | ✅ | ✅ |
 
