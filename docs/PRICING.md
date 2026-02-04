@@ -55,10 +55,25 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 - All verification types
 - Webhooks
 - Custom branding (your business name, logo, colors in messages)
-- BYOC (your own Telegram bot, WhatsApp, Email, SMS)
 - Priority support
 
 *Perfect for: Scale-ups, SaaS platforms*
+
+---
+
+### White-Label
+**€190/month**
+
+- 10,000 proofs included
+- €0.02 per additional proof
+- **€0.019/proof effective rate**
+- All verification types
+- Webhooks
+- Custom branding
+- **BYOC (your own Telegram bot, WhatsApp, Viber, Email, SMS)**
+- Priority support
+
+*Perfect for: Platforms requiring complete white-label experience*
 
 ---
 
@@ -74,11 +89,11 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ---
 
-## Custom Branding (Business Plan)
+## Custom Branding (Business & White-Label)
 
-**Default (all plans):** Shared infrastructure
+**Default (PAYG & Pro):** Shared infrastructure
 - `@proof_holdings_bot` on Telegram
-- Shared WhatsApp number
+- Shared WhatsApp and Viber numbers
 - Emails from proof.holdings
 
 **Custom branding** lets users see YOUR context in messages:
@@ -93,7 +108,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 
 ---
 
-## BYOC - Bring Your Own Channels (Business Plan)
+## BYOC - Bring Your Own Channels (White-Label)
 
 Full channel ownership - users interact with YOUR endpoints:
 
@@ -101,6 +116,7 @@ Full channel ownership - users interact with YOUR endpoints:
 |---------|--------|------|
 | Telegram | `@proof_holdings_bot` | `@your_company_bot` |
 | WhatsApp | Shared number | Your WhatsApp Business number |
+| Viber | Shared number | Your Viber Business number |
 | Email | noreply@proof.holdings | noreply@yourcompany.com |
 | SMS | Shared number | Your phone number |
 
@@ -112,12 +128,12 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 
 ### Per-Verification Cost
 
-| Volume | PAYG | Pro | Business | SMS (Twilio) |
-|--------|------|-----|----------|--------------|
-| 1,000 | €0 (free tier) | €29 | €79 | $50-400 |
-| 3,000 | €60 | €29 | €79 | $150-1,200 |
-| 10,000 | €270 | €204 | €79 | $500-4,000 |
-| 50,000 | €1,470 | €1,204 | €879 | $2,500-20,000 |
+| Volume | PAYG | Pro | Business | White-Label | SMS (Twilio) |
+|--------|------|-----|----------|-------------|--------------|
+| 1,000 | €0 (free) | €29 | €79 | €190 | $50-400 |
+| 3,000 | €60 | €29 | €79 | €190 | $150-1,200 |
+| 10,000 | €270 | €204 | €79 | €190 | $500-4,000 |
+| 50,000 | €1,470 | €1,204 | €879 | €990 | $2,500-20,000 |
 
 ### Effective Rate at Volume
 
@@ -126,6 +142,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 | PAYG | 1,000 | €0.03 | €0.027 |
 | Pro | 3,000 | €0.025 | €0.0204 |
 | Business | 10,000 | €0.02 | **€0.0079** |
+| White-Label | 10,000 | €0.02 | €0.019 |
 
 ---
 
@@ -134,6 +151,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 **1 proof = 1 verified asset**
 
 - ✅ Phone number verified via Telegram → 1 proof
+- ✅ Phone number verified via Viber → 1 proof
 - ✅ Email verified via magic link → 1 proof
 - ✅ Domain verified via DNS → 1 proof
 - ✅ Social account verified via OAuth → 1 proof
@@ -151,6 +169,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 ## All Plans Include
 
 - **All verification types** - Phone, email, domain, social, wallet
+- **All channels** - Telegram, WhatsApp, Viber, SMS, Email, DNS, HTTP
 - **Unlimited API calls** - No rate limits on reads
 - **Unlimited proof validation** - Verify offline with JWKS
 - **Test mode** - Full functionality, no charges
@@ -162,14 +181,14 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 
 ## Features by Plan
 
-| Feature | PAYG | Pro | Business |
-|---------|------|-----|----------|
-| All channels (Telegram, WhatsApp, SMS, Email, DNS, HTTP) | ✅ | ✅ | ✅ |
-| Webhooks | ✅ | ✅ | ✅ |
-| Custom branding (business name, logo, colors) | ❌ | ❌ | ✅ |
-| Custom message templates | ❌ | ❌ | ✅ |
-| BYOC (your own Telegram bot, WhatsApp, Email, SMS) | ❌ | ❌ | ✅ |
-| Priority support | ❌ | ✅ | ✅ |
+| Feature | PAYG | Pro | Business | White-Label |
+|---------|------|-----|----------|-------------|
+| All channels (Telegram, WhatsApp, Viber, SMS, Email, DNS, HTTP) | ✅ | ✅ | ✅ | ✅ |
+| Webhooks | ✅ | ✅ | ✅ | ✅ |
+| Custom branding (business name, logo, colors) | ❌ | ❌ | ✅ | ✅ |
+| Custom message templates | ❌ | ❌ | ✅ | ✅ |
+| BYOC (your own Telegram, WhatsApp, Viber, Email, SMS) | ❌ | ❌ | ❌ | ✅ |
+| Priority support | ❌ | ✅ | ✅ | ✅ |
 
 ---
 
@@ -192,6 +211,10 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 ### Is there a free trial?
 - PAYG includes 1,000 free proofs/month
 - No credit card required to start
+
+### What's the difference between Business and White-Label?
+- **Business (€79)**: Custom branding in messages, shared infrastructure
+- **White-Label (€190)**: BYOC - your own Telegram bot, WhatsApp number, etc.
 
 ---
 
