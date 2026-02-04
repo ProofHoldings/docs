@@ -73,7 +73,7 @@ It is NOT:
 **Traditional vulnerability:** Attacker reuses captured authentication.
 
 **Our mitigation:**
-- Challenge codes expire (10-30 minutes depending on channel)
+- Challenge codes expire (phone: 10 min, email: 30 min, domain: 24 hours)
 - Proofs have `exp` claim (default 30 days)
 - Each verification generates unique proof token
 - `iat` (issued at) prevents backdating
@@ -107,11 +107,11 @@ It is NOT:
 
 **Our mitigation:**
 - RS256 asymmetric signing
-- Private key never leaves server (future: AWS KMS)
+- Private key stored securely on server
 - Public key only verifies, cannot sign
 - Key ID (`kid`) enables rotation
 
-**Residual risk:** Private key compromise would allow forgery — mitigated by planned KMS migration.
+**Residual risk:** Private key compromise would allow forgery — mitigated by server access controls and audit logging.
 
 #### 8. Man-in-the-Middle
 **Traditional vulnerability:** Attacker intercepts API communication.
@@ -156,7 +156,7 @@ It is NOT:
 - Audit logging
 - No access to raw credentials (bcrypt hashed)
 
-**Future mitigation:** AWS KMS — even with full server access, signing key cannot be extracted.
+**Future consideration:** Hardware security modules (HSM) could provide additional key protection.
 
 #### 5. Collusion
 **Scenario:** User and attacker work together to create "verified" accounts.
@@ -236,7 +236,7 @@ Don't rely solely on proof.holdings. Combine with:
 
 ### Challenge Generation
 ```
-Algorithm: crypto.randomBytes(32)
+Algorithm: crypto.randomBytes(12) with modulo reduction
 Alphabet: A-Z, 0-9 (36 characters)
 Length: 6 characters
 Entropy: log2(36^6) = 31.0 bits
@@ -249,6 +249,7 @@ Algorithm: RS256 (RSA with SHA-256)
 Key size: 2048 bits
 Key distribution: JWKS (/.well-known/jwks.json)
 Token format: JWT (RFC 7519)
+Note: Production uses RS256. HS256 fallback exists for development only.
 ```
 
 ### Identifier Hashing
@@ -275,7 +276,7 @@ Validation: Compare within 5-minute window
 
 1. **Revoke affected proofs** — `POST /api/v1/proofs/:id/revoke`
 2. **Check revocation list** — `GET /api/v1/proofs/revoked`
-3. **Contact us** — security@proof.holdings
+3. **Contact us** — hello@proof.holdings
 4. **Require re-verification** — Don't trust existing proofs
 
 ### Our Commitment
