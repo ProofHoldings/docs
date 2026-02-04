@@ -109,7 +109,7 @@ POST /api/v1/proofs/{id}/revoke
 |------|----------|---------|
 | `phone` | telegram, whatsapp, sms, viber | +15551234567 |
 | `email` | email | user@example.com |
-| `domain` | dns, http | example.com |
+| `domain` | dns, http, email, auto | example.com |
 | `social` | github, google, twitter, ... | @username |
 | `wallet` | ethereum, solana, bitcoin | 0xAb5801... |
 
@@ -296,4 +296,4 @@ Everything else is implementation detail.
 
 ---
 
-*Read the full [AI Developer Guide](./AI_DEVELOPER_GUIDE.md) for security details, threat model, and test vectors.*
+*Read the [Threat Model](./THREAT_MODEL.md) for security details and [test-vectors.json](./test-vectors.json) for SDK test cases.*

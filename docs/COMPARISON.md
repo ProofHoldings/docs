@@ -146,7 +146,7 @@ Server shows code → User sends message TO server → Verified → Signed proof
 - No phone number collection upfront
 
 **Cons:**
-- Requires messaging app (Telegram/WhatsApp) or SMS capability
+- Requires messaging app (Telegram/WhatsApp/Viber) or SMS capability
 - New pattern (education needed)
 
 **When to use:**

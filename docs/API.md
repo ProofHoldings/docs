@@ -48,10 +48,10 @@ Create a new verification challenge.
 
 | Type | Valid Channels |
 |------|----------------|
-| `phone` | `telegram`, `sms`, `whatsapp` |
+| `phone` | `telegram`, `whatsapp`, `viber`, `sms` |
 | `email` | `email` |
 | `domain` | `dns`, `http`, `email`, `auto` |
-| `social` | `github`, `google`, `discord`, etc. (coming soon) |
+| `social` | `github`, `google`, `twitter`, etc. (coming soon) |
 | `wallet` | `ethereum`, `solana`, `bitcoin` (coming soon) |
 
 ### Example Request

@@ -202,7 +202,7 @@
     },
     {
       "type": "domain",
-      "valid_channels": ["dns", "http"],
+      "valid_channels": ["dns", "http", "email", "auto"],
       "identifier_format": "Domain name without protocol",
       "identifier_example": "example.com",
       "ttl_seconds": 86400
@@ -234,19 +234,20 @@
       },
       "expected_response": {
         "id": "507f1f77bcf86cd799439011",
-        "status": "pending",
         "type": "phone",
         "channel": "telegram",
-        "challenge_code": "X7K2M9",
-        "challenge_expires_at": "2026-02-04T10:10:00.000Z",
-        "instructions": {
-          "action": "send_message",
-          "target": "@proof_holdings_bot",
-          "message": "X7K2M9",
-          "deep_link": "https://t.me/proof_holdings_bot?start=X7K2M9"
-        }
+        "status": "pending",
+        "identifier": "+15551234567",
+        "challenge": {
+          "code": "X7K2M9",
+          "expires_at": "2026-02-04T10:10:00.000Z",
+          "send_to": "@proof_holdings_bot",
+          "instruction": "Open Telegram and tap the button to share your phone number",
+          "deep_link": "https://t.me/proof_holdings_bot?start=507f1f77bcf86cd799439011"
+        },
+        "created_at": "2026-02-04T10:00:00.000Z"
       },
-      "note": "challenge_code only returned on creation, not on subsequent GETs"
+      "note": "challenge object only returned on creation, not on subsequent GETs. deep_link uses verification ID for Telegram."
     },
     {
       "description": "Get verification - pending status",

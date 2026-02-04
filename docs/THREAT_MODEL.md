@@ -398,6 +398,7 @@ Note: Production warns if webhook secret not configured — receivers cannot ver
 
 ## Related Documentation
 
-- [API Reference](https://proof.holdings/docs/api) — Endpoints, authentication, webhooks
-- [Integration Guide](https://proof.holdings/docs/integration) — Quick start, SDKs, examples
-- [Pricing](https://proof.holdings/pricing) — Plans and verification limits
+- [API Reference](./API.md) — Endpoints, authentication, webhooks
+- [Primitives](./PRIMITIVES.md) — Core mental model
+- [Pricing](./PRICING.md) — Plans and verification limits
+- [Test Vectors](./test-vectors.json) — Golden test cases for SDK authors
