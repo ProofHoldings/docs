@@ -99,6 +99,7 @@ It is NOT:
 - Challenge expires after attempts exhausted
 - Rate limiting per tenant and per IP
 - Redis-backed tracking
+- Exponential backoff between attempts (1s → 2s → 4s → 8s → 16s)
 
 **Residual risk:** 3/2.1B = 0.00000014% chance per challenge window.
 
@@ -117,11 +118,21 @@ It is NOT:
 **Traditional vulnerability:** Attacker intercepts API communication.
 
 **Our mitigation:**
-- HTTPS only (HSTS enforced)
+- HTTPS only (HSTS with preload directive)
 - Cloudflare proxy with origin IP lockdown
 - Webhook signatures (HMAC-SHA256 with timestamp)
 
 **Residual risk:** Cloudflare compromise would be catastrophic (affects most of internet).
+
+#### 9. Denial of Service (Request Flooding)
+**Traditional vulnerability:** Attacker sends oversized payloads to exhaust memory.
+
+**Our mitigation:**
+- Request body size limit (10KB max)
+- Cloudflare DDoS protection
+- Rate limiting per tenant and per IP
+
+**Residual risk:** Distributed attacks at Cloudflare scale.
 
 ---
 
@@ -266,6 +277,7 @@ Algorithm: HMAC-SHA256
 Payload: timestamp.body
 Header: X-Proof-Signature
 Validation: Compare within 5-minute window
+Note: Production warns if webhook secret not configured — receivers cannot verify authenticity without it.
 ```
 
 ---
@@ -291,6 +303,7 @@ Validation: Compare within 5-minute window
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1 | 2026-02-04 | Added: exponential backoff, request size limits, DoS protection, HSTS preload |
 | 1.0 | 2026-02-04 | Initial threat model |
 
 ---
