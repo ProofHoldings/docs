@@ -67,7 +67,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 **€190/month**
 
 - 10,000 proofs included
-- €0.02 per additional proof
+- €0.015 per additional proof
 - **€0.019/proof effective rate**
 - All verification types
 - Webhooks
@@ -135,7 +135,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 | 1,000 | €0 (free) | €29 | €79 | €190 | $50-400 |
 | 3,000 | €60 | €29 | €79 | €190 | $150-1,200 |
 | 10,000 | €270 | €204 | €79 | €190 | $500-4,000 |
-| 50,000 | €1,470* | €1,204* | €879* | €990* | $2,500-20,000 |
+| 50,000 | €1,470* | €1,204* | €879* | €790* | $2,500-20,000 |
 
 *50K calculation: Base price + (volume - included) × overage rate
 
@@ -146,7 +146,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 | PAYG | €0 | 1,000 | €0.03 | €0.027 |
 | Pro | €29 | 3,000 | €0.025 | €0.0204 |
 | Business | €79 | 10,000 | €0.02 | **€0.0079** |
-| White-Label | €190 | 10,000 | €0.02 | €0.019 |
+| White-Label | €190 | 10,000 | €0.015 | €0.019 |
 | Enterprise | Custom | 100,000+ | Volume discount | Contact us |
 
 ---
