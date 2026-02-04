@@ -2,7 +2,7 @@
 
 Auto-DNS verification allows instant domain verification by automatically creating TXT records via provider APIs. No manual DNS configuration required.
 
-**48 providers supported.**
+**55 providers supported.**
 
 ---
 
