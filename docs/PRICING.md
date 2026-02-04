@@ -19,7 +19,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 ## Plans
 
 ### Pay As You Go
-**€0.03/proof** (first 1,000 proofs/month free)
+**€0.03/proof** (1,000 proofs free every month)
 
 - No monthly fee
 - No commitment
@@ -119,7 +119,7 @@ Full channel ownership - users interact with YOUR endpoints:
 | Telegram | `@proof_holdings_bot` | `@your_company_bot` |
 | WhatsApp | Shared number | Your WhatsApp Business number |
 | Viber | Shared number | Your Viber Business number |
-| Email | noreply@proof.holdings | noreply@yourcompany.com |
+| Email | verify@verify.proof.holdings | noreply@yourcompany.com |
 | SMS | Shared number | Your phone number |
 
 BYOC = complete white-label experience. Users never see proof.holdings.
@@ -135,16 +135,19 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 | 1,000 | €0 (free) | €29 | €79 | €190 | $50-400 |
 | 3,000 | €60 | €29 | €79 | €190 | $150-1,200 |
 | 10,000 | €270 | €204 | €79 | €190 | $500-4,000 |
-| 50,000 | €1,470 | €1,204 | €879 | €990 | $2,500-20,000 |
+| 50,000 | €1,470* | €1,204* | €879* | €990* | $2,500-20,000 |
+
+*50K calculation: Base price + (volume - included) × overage rate
 
 ### Effective Rate at Volume
 
-| Plan | Included | Rate After | Effective at 10K |
-|------|----------|------------|------------------|
-| PAYG | 1,000 | €0.03 | €0.027 |
-| Pro | 3,000 | €0.025 | €0.0204 |
-| Business | 10,000 | €0.02 | **€0.0079** |
-| White-Label | 10,000 | €0.02 | €0.019 |
+| Plan | Base Price | Included | Rate After | Effective at 10K |
+|------|------------|----------|------------|------------------|
+| PAYG | €0 | 1,000 | €0.03 | €0.027 |
+| Pro | €29 | 3,000 | €0.025 | €0.0204 |
+| Business | €79 | 10,000 | €0.02 | **€0.0079** |
+| White-Label | €190 | 10,000 | €0.02 | €0.019 |
+| Enterprise | Custom | 100,000+ | Volume discount | Contact us |
 
 ---
 
@@ -153,7 +156,9 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 **1 proof = 1 verified asset**
 
 - ✅ Phone number verified via Telegram → 1 proof
+- ✅ Phone number verified via WhatsApp → 1 proof
 - ✅ Phone number verified via Viber → 1 proof
+- ✅ Phone number verified via SMS → 1 proof
 - ✅ Email verified via magic link → 1 proof
 - ✅ Domain verified via DNS → 1 proof
 - ✅ Social account verified via OAuth → 1 proof
@@ -190,7 +195,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 | Custom message templates | ✅ | ✅ | ✅ | ✅ |
 | Webhooks | ✅ | ✅ | ✅ | ✅ |
 | BYOC (your own Telegram, WhatsApp, Viber, Email, SMS) | ❌ | ❌ | ❌ | ✅ |
-| Priority support | ❌ | ✅ | ✅ | ✅ |
+| Priority support | ❌ | ❌ | ✅ | ✅ |
 
 ---
 
