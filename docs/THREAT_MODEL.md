@@ -134,6 +134,46 @@ It is NOT:
 
 **Residual risk:** Distributed attacks at Cloudflare scale.
 
+#### 10. Server-Side Request Forgery (SSRF)
+**Traditional vulnerability:** Attacker tricks server into making requests to internal resources.
+
+**Our mitigation:**
+- URL validation blocks localhost, 127.0.0.1, private IP ranges
+- Blocks .local, .internal, .localhost domains
+- Webhook URLs validated before delivery
+
+**Residual risk:** DNS rebinding attacks (mitigated by short TTL).
+
+#### 11. Path Traversal & Probing
+**Traditional vulnerability:** Attacker probes for sensitive files (.git, .env, admin panels).
+
+**Our mitigation:**
+- Nginx WAF blocklist (40+ attack patterns)
+- Blocks: .git, .env, wp-admin, phpmyadmin, .sql, shell paths
+- Auto-blocking of repeat offenders (IP escalation to firewall)
+
+**Residual risk:** Zero-day paths not in blocklist.
+
+#### 12. Session Hijacking
+**Traditional vulnerability:** Attacker reuses stolen JWT tokens.
+
+**Our mitigation:**
+- JWT blacklist checked on every request (Redis-backed)
+- Logout invalidates token immediately
+- Short token expiry with refresh rotation
+
+**Residual risk:** Token valid until next Redis check (milliseconds).
+
+#### 13. Clickjacking & XSS
+**Traditional vulnerability:** Attacker embeds site in iframe or injects scripts.
+
+**Our mitigation:**
+- Helmet.js security headers (X-Frame-Options: DENY, X-Content-Type-Options: nosniff)
+- Strict CORS (production locked to https://proof.holdings)
+- Content-Security-Policy headers
+
+**Residual risk:** Browser without header support (rare, legacy).
+
 ---
 
 ### Threats We Do NOT Protect Against
@@ -271,6 +311,22 @@ Output: 64-character hex string
 Purpose: Privacy — raw identifier not in token
 ```
 
+### BYOC Credential Encryption
+```
+Algorithm: AES-256-GCM
+Key derivation: PBKDF2 with 100,000 iterations
+Purpose: Encrypt bring-your-own-credentials (Twilio, SendGrid, etc.) at rest
+Note: Each tenant's credentials encrypted with unique derived key
+```
+
+### Wallet Address Validation
+```
+Ethereum: 0x + 40 hex characters (checksum validated)
+Solana: Base58, 32-44 characters
+Bitcoin: Legacy (1...), P2SH (3...), Bech32 (bc1...)
+Purpose: Reject malformed addresses before verification attempt
+```
+
 ### Webhook Signatures
 ```
 Algorithm: HMAC-SHA256
@@ -303,6 +359,7 @@ Note: Production warns if webhook secret not configured — receivers cannot ver
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.2 | 2026-02-04 | Added: SSRF protection, WAF blocklist, session hijacking, clickjacking/XSS, BYOC encryption, wallet validation |
 | 1.1 | 2026-02-04 | Added: exponential backoff, request size limits, DoS protection, HSTS preload |
 | 1.0 | 2026-02-04 | Initial threat model |
 
