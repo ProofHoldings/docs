@@ -1,0 +1,155 @@
+# proof.holdings
+
+**Cryptographic proofs of digital asset control.**
+
+proof.holdings issues signed JWT proofs that a user controls a digital asset (phone, email, domain, wallet) by completing a challenge from that asset. Proofs are offline-verifiable using RS256 public keys.
+
+[![API Status](https://img.shields.io/badge/API-Live-brightgreen)](https://api.proof.holdings/health)
+[![JWKS](https://img.shields.io/badge/JWKS-RS256-blue)](https://api.proof.holdings/.well-known/jwks.json)
+
+---
+
+## The Abstraction
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│    ASSET ──────► CHALLENGE ──────► USER ACTION ──────► PROOF               │
+│                                                                             │
+│    "phone"       "Send X7K2M9     User sends         Signed JWT            │
+│    "+1555..."     to our bot"     the message        (offline-verifiable)  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Three primitives. Four steps. That's it.**
+
+---
+
+## Quick Start
+
+```bash
+# 1. Create verification challenge
+curl -X POST https://api.proof.holdings/api/v1/verifications \
+  -H "Authorization: Bearer pk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{"type":"phone","channel":"telegram","identifier":"+15551234567"}'
+
+# Response: { "id": "...", "challenge_code": "X7K2M9", "instructions": {...} }
+
+# 2. User sends challenge code to @proof_holdings_bot on Telegram
+
+# 3. Poll for completion (or use webhook)
+curl https://api.proof.holdings/api/v1/verifications/{id} \
+  -H "Authorization: Bearer pk_live_..."
+
+# Response includes: { "status": "verified", "proof": { "token": "eyJ..." } }
+
+# 4. Verify proof offline
+curl https://api.proof.holdings/.well-known/jwks.json
+# Then: jwt.verify(proof_token, publicKey, { algorithms: ['RS256'] })
+```
+
+---
+
+## Three Primitives
+
+| Primitive | Endpoint | Purpose |
+|-----------|----------|---------|
+| `createChallenge` | `POST /api/v1/verifications` | Generate challenge for user |
+| `verifyProof` | `POST /api/v1/proofs/validate` or offline via JWKS | Validate proof token |
+| `revokeProof` | `POST /api/v1/proofs/:id/revoke` | Invalidate a proof |
+
+---
+
+## Live Channels
+
+| Type | Channels | Status |
+|------|----------|--------|
+| **Phone** | Telegram, SMS, WhatsApp | ✅ Live |
+| **Email** | OTP + Magic Link | ✅ Live |
+| **Domain** | DNS, HTTP, Email, Auto-DNS (53 providers) | ✅ Live |
+| **Social** | GitHub, Google, Discord, etc. | Coming Soon |
+| **Wallet** | Ethereum, Solana, Bitcoin | Coming Soon |
+
+---
+
+## Design Principles
+
+| Principle | What it means |
+|-----------|---------------|
+| **Determinism** | Same input = same output. No hidden state. |
+| **Primitives** | Three functions. Compose them as needed. |
+| **Testability** | Test vectors provided. Golden cases for SDKs. |
+| **Composability** | Proofs are portable. Use across systems. |
+| **Clarity** | No magic. Explicit behavior. Read the code. |
+
+---
+
+## Machine-Readable Endpoints
+
+| Endpoint | Purpose | Cache |
+|----------|---------|-------|
+| `GET /.well-known/jwks.json` | RS256 public keys for offline verification | 24h |
+| `GET /api/v1/proofs/revoked` | Signed revocation list | 5min |
+| `GET /health` | Service status | No cache |
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [**PRIMITIVES.md**](docs/PRIMITIVES.md) | Core mental model in one page |
+| [**API.md**](docs/API.md) | Complete API reference |
+| [**THREAT_MODEL.md**](docs/THREAT_MODEL.md) | Security guarantees and non-goals |
+| [**COMPARISON.md**](docs/COMPARISON.md) | vs SMS OTP, TOTP, WebAuthn |
+| [**PRICING.md**](docs/PRICING.md) | Pricing tiers |
+| [**test-vectors.json**](docs/test-vectors.json) | Golden test cases for SDK authors |
+
+---
+
+## DNS Provider Integrations
+
+Auto-DNS verification supports **53 providers**. [Full list →](integrations/dns-providers/README.md)
+
+**Global Leaders:** Cloudflare, GoDaddy, Route53, Google Cloud, Azure, DigitalOcean
+
+**Major Registrars:** Namecheap, NameSilo, Porkbun, Name.com, IONOS, OVH, Gandi
+
+**EU Regional:** Hetzner, TransIP, INWX, Netcup, Infomaniak, Domeneshop, Scaleway
+
+[See all 53 providers →](integrations/dns-providers/README.md)
+
+---
+
+## Why proof.holdings?
+
+**Traditional SMS verification:**
+```
+Server sends SMS → User receives code → User enters code → Verified
+     ($0.05-0.40)     (can be phished)     (replay window)
+```
+
+**proof.holdings (Reverse OTP):**
+```
+Server shows code → User sends TO server → Verified → Signed proof
+     (free)           (user-initiated)      (offline-verifiable)
+```
+
+**Result:** €79/month for what costs $1,000+ with SMS.
+
+---
+
+## Links
+
+- **Website:** https://proof.holdings
+- **API:** https://api.proof.holdings
+- **Docs:** https://proof.holdings/docs
+- **Status:** https://api.proof.holdings/health
+
+---
+
+## License
+
+Proprietary. Contact hello@proof.holdings for licensing.

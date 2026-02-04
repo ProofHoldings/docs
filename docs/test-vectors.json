@@ -1,0 +1,482 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "proof.holdings Test Vectors",
+  "description": "Golden test cases for SDK authors to validate their implementations",
+  "version": "1.0.0",
+  "generated": "2026-02-04",
+
+  "normalization_vectors": [
+    {
+      "description": "US phone number with country code",
+      "type": "phone",
+      "input": "+1 (555) 123-4567",
+      "expected_normalized": "+15551234567"
+    },
+    {
+      "description": "US phone number without country code",
+      "type": "phone",
+      "input": "555-123-4567",
+      "expected_normalized": "+15551234567",
+      "note": "Assumes US default region"
+    },
+    {
+      "description": "UK phone number",
+      "type": "phone",
+      "input": "+44 7700 900123",
+      "expected_normalized": "+447700900123"
+    },
+    {
+      "description": "Email with mixed case",
+      "type": "email",
+      "input": "John.Doe@Example.COM",
+      "expected_normalized": "john.doe@example.com"
+    },
+    {
+      "description": "Email with plus addressing",
+      "type": "email",
+      "input": "user+tag@gmail.com",
+      "expected_normalized": "user+tag@gmail.com",
+      "note": "Plus addressing preserved (not Gmail-specific normalization)"
+    },
+    {
+      "description": "Domain with www prefix",
+      "type": "domain",
+      "input": "WWW.Example.COM",
+      "expected_normalized": "example.com"
+    },
+    {
+      "description": "Domain with trailing slash",
+      "type": "domain",
+      "input": "https://example.com/",
+      "expected_normalized": "example.com"
+    },
+    {
+      "description": "Subdomain",
+      "type": "domain",
+      "input": "api.example.com",
+      "expected_normalized": "api.example.com"
+    },
+    {
+      "description": "Ethereum address checksum",
+      "type": "wallet",
+      "channel": "ethereum",
+      "input": "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+      "expected_normalized": "0xab5801a7d398351b8be11c439e05c5b3259aec9b",
+      "note": "Lowercase for comparison, original case may be preserved for display"
+    },
+    {
+      "description": "Solana address",
+      "type": "wallet",
+      "channel": "solana",
+      "input": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+      "expected_normalized": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+      "note": "Solana addresses are case-sensitive (base58)"
+    }
+  ],
+
+  "identifier_hash_vectors": [
+    {
+      "description": "Phone number hash",
+      "normalized_identifier": "+15551234567",
+      "expected_hash": "8a59780bb8cd2ba022bfa5ba2ea3b6e07af17a7d8b30c1f9b3390e36f69019e4",
+      "algorithm": "sha256",
+      "note": "Hash is hex-encoded, used in proof token identifier_hash claim"
+    },
+    {
+      "description": "Email hash",
+      "normalized_identifier": "john.doe@example.com",
+      "expected_hash": "836f82db99121b3481011f16b49dfa5fbc714a0d1b1b9f784a1ebbbf5b39577f",
+      "algorithm": "sha256"
+    },
+    {
+      "description": "Domain hash",
+      "normalized_identifier": "example.com",
+      "expected_hash": "a379a6f6eeafb9a55e378c118034e2751e682fab9f2d30ab13d2125586ce1947",
+      "algorithm": "sha256"
+    }
+  ],
+
+  "challenge_format": {
+    "description": "Challenge code format specification",
+    "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    "length": 6,
+    "example": "X7K2M9",
+    "regex": "^[A-Z0-9]{6}$",
+    "entropy_bits": 31.0,
+    "note": "Generated using crypto.randomBytes() with modulo bias reduction"
+  },
+
+  "proof_token_vectors": [
+    {
+      "description": "Valid phone verification proof token claims",
+      "input": {
+        "verification_id": "507f1f77bcf86cd799439011",
+        "user_id": "507f1f77bcf86cd799439012",
+        "type": "phone",
+        "channel": "telegram",
+        "normalized_identifier": "+15551234567",
+        "verified_at": "2026-02-04T10:00:00.000Z",
+        "expires_in_seconds": 2592000
+      },
+      "expected_claims": {
+        "iss": "proof.holdings",
+        "sub": "507f1f77bcf86cd799439011",
+        "proof_schema_version": "1.0",
+        "user_id": "507f1f77bcf86cd799439012",
+        "type": "phone",
+        "channel": "telegram",
+        "identifier_hash": "8a59780bb8cd2ba022bfa5ba2ea3b6e07af17a7d8b30c1f9b3390e36f69019e4",
+        "verified_at": "2026-02-04T10:00:00.000Z"
+      },
+      "expected_header": {
+        "alg": "RS256",
+        "typ": "JWT",
+        "kid": "proof-holdings-2026-01"
+      },
+      "notes": [
+        "iat and exp are Unix timestamps (seconds)",
+        "exp = iat + expires_in_seconds",
+        "identifier_hash is SHA-256 of normalized_identifier"
+      ]
+    },
+    {
+      "description": "Valid email verification proof token claims",
+      "input": {
+        "verification_id": "507f1f77bcf86cd799439013",
+        "user_id": "507f1f77bcf86cd799439012",
+        "type": "email",
+        "channel": "email",
+        "normalized_identifier": "john.doe@example.com",
+        "verified_at": "2026-02-04T11:00:00.000Z",
+        "expires_in_seconds": 2592000
+      },
+      "expected_claims": {
+        "iss": "proof.holdings",
+        "sub": "507f1f77bcf86cd799439013",
+        "proof_schema_version": "1.0",
+        "user_id": "507f1f77bcf86cd799439012",
+        "type": "email",
+        "channel": "email",
+        "identifier_hash": "836f82db99121b3481011f16b49dfa5fbc714a0d1b1b9f784a1ebbbf5b39577f",
+        "verified_at": "2026-02-04T11:00:00.000Z"
+      }
+    },
+    {
+      "description": "Valid domain verification proof token claims",
+      "input": {
+        "verification_id": "507f1f77bcf86cd799439014",
+        "user_id": "507f1f77bcf86cd799439012",
+        "type": "domain",
+        "channel": "dns",
+        "normalized_identifier": "example.com",
+        "verified_at": "2026-02-04T12:00:00.000Z",
+        "expires_in_seconds": 7776000
+      },
+      "expected_claims": {
+        "iss": "proof.holdings",
+        "sub": "507f1f77bcf86cd799439014",
+        "proof_schema_version": "1.0",
+        "user_id": "507f1f77bcf86cd799439012",
+        "type": "domain",
+        "channel": "dns",
+        "identifier_hash": "a379a6f6eeafb9a55e378c118034e2751e682fab9f2d30ab13d2125586ce1947",
+        "verified_at": "2026-02-04T12:00:00.000Z"
+      }
+    }
+  ],
+
+  "verification_types": [
+    {
+      "type": "phone",
+      "valid_channels": ["whatsapp", "telegram", "viber", "sms"],
+      "identifier_format": "E.164 phone number",
+      "identifier_example": "+15551234567",
+      "ttl_seconds": 600
+    },
+    {
+      "type": "email",
+      "valid_channels": ["email"],
+      "identifier_format": "RFC 5321 email address",
+      "identifier_example": "user@example.com",
+      "ttl_seconds": 1800
+    },
+    {
+      "type": "domain",
+      "valid_channels": ["dns", "http"],
+      "identifier_format": "Domain name without protocol",
+      "identifier_example": "example.com",
+      "ttl_seconds": 86400
+    },
+    {
+      "type": "social",
+      "valid_channels": ["github", "google", "facebook", "twitter", "linkedin", "instagram", "youtube", "tiktok"],
+      "identifier_format": "Platform-specific username or ID",
+      "identifier_example": "octocat",
+      "ttl_seconds": 600
+    },
+    {
+      "type": "wallet",
+      "valid_channels": ["ethereum", "solana", "bitcoin"],
+      "identifier_format": "Blockchain address",
+      "identifier_example": "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+      "ttl_seconds": 600
+    }
+  ],
+
+  "api_response_vectors": [
+    {
+      "description": "Create verification - success response",
+      "endpoint": "POST /api/v1/verifications",
+      "request": {
+        "type": "phone",
+        "channel": "telegram",
+        "identifier": "+15551234567"
+      },
+      "expected_response": {
+        "id": "507f1f77bcf86cd799439011",
+        "status": "pending",
+        "type": "phone",
+        "channel": "telegram",
+        "challenge_code": "X7K2M9",
+        "challenge_expires_at": "2026-02-04T10:10:00.000Z",
+        "instructions": {
+          "action": "send_message",
+          "target": "@proof_holdings_bot",
+          "message": "X7K2M9",
+          "deep_link": "https://t.me/proof_holdings_bot?start=X7K2M9"
+        }
+      },
+      "note": "challenge_code only returned on creation, not on subsequent GETs"
+    },
+    {
+      "description": "Get verification - pending status",
+      "endpoint": "GET /api/v1/verifications/:id",
+      "expected_response": {
+        "id": "507f1f77bcf86cd799439011",
+        "status": "pending",
+        "type": "phone",
+        "channel": "telegram",
+        "identifier": "+15551234567",
+        "attempts": 0,
+        "max_attempts": 3,
+        "challenge_expires_at": "2026-02-04T10:10:00.000Z",
+        "created_at": "2026-02-04T10:00:00.000Z"
+      },
+      "note": "challenge_code NOT included in GET response"
+    },
+    {
+      "description": "Get verification - verified status",
+      "endpoint": "GET /api/v1/verifications/:id",
+      "expected_response": {
+        "id": "507f1f77bcf86cd799439011",
+        "status": "verified",
+        "type": "phone",
+        "channel": "telegram",
+        "identifier": "+15551234567",
+        "verified_at": "2026-02-04T10:05:00.000Z",
+        "proof_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InByb29mLWhvbGRpbmdzLTIwMjYtMDEifQ...",
+        "proof_expires_at": "2026-03-06T10:05:00.000Z",
+        "created_at": "2026-02-04T10:00:00.000Z"
+      }
+    },
+    {
+      "description": "Validate proof - valid response",
+      "endpoint": "POST /api/v1/proofs/validate",
+      "request": {
+        "proof_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InByb29mLWhvbGRpbmdzLTIwMjYtMDEifQ..."
+      },
+      "expected_response": {
+        "valid": true,
+        "verification": {
+          "id": "507f1f77bcf86cd799439011",
+          "type": "phone",
+          "channel": "telegram",
+          "verified_at": "2026-02-04T10:05:00.000Z",
+          "expires_at": "2026-03-06T10:05:00.000Z",
+          "user_id": "507f1f77bcf86cd799439012"
+        }
+      }
+    },
+    {
+      "description": "Validate proof - expired response",
+      "endpoint": "POST /api/v1/proofs/validate",
+      "expected_response": {
+        "valid": false,
+        "reason": "expired",
+        "message": "Proof token has expired"
+      }
+    },
+    {
+      "description": "Validate proof - revoked response",
+      "endpoint": "POST /api/v1/proofs/validate",
+      "expected_response": {
+        "valid": false,
+        "reason": "revoked",
+        "message": "This proof has been revoked",
+        "revoked_at": "2026-02-04T15:00:00.000Z",
+        "revoked_reason": "user_request"
+      }
+    },
+    {
+      "description": "Revoke proof - success response",
+      "endpoint": "POST /api/v1/proofs/:id/revoke",
+      "request": {
+        "reason": "user_request"
+      },
+      "expected_response": {
+        "success": true,
+        "verification_id": "507f1f77bcf86cd799439011",
+        "revoked_at": "2026-02-04T15:00:00.000Z",
+        "reason": "user_request"
+      }
+    },
+    {
+      "description": "Get proof status response",
+      "endpoint": "GET /api/v1/proofs/:id/status",
+      "expected_response": {
+        "proof_id": "507f1f77bcf86cd799439011",
+        "status": "verified",
+        "is_valid": true,
+        "is_revoked": false,
+        "revoked_at": null,
+        "revoked_reason": null,
+        "expires_at": "2026-03-06T10:05:00.000Z",
+        "is_expired": false,
+        "verified_at": "2026-02-04T10:05:00.000Z"
+      }
+    },
+    {
+      "description": "Revocation list response",
+      "endpoint": "GET /api/v1/proofs/revoked",
+      "expected_response": {
+        "revoked": [
+          {
+            "proof_id": "507f1f77bcf86cd799439015",
+            "revoked_at": "2026-02-04T14:00:00.000Z",
+            "reason": "fraud"
+          },
+          {
+            "proof_id": "507f1f77bcf86cd799439016",
+            "revoked_at": "2026-02-04T13:00:00.000Z",
+            "reason": "user_request"
+          }
+        ],
+        "issued_at": "2026-02-04T15:00:00.000Z",
+        "count": 2,
+        "signature": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InByb29mLWhvbGRpbmdzLTIwMjYtMDEifQ...",
+        "kid": "proof-holdings-2026-01"
+      },
+      "note": "signature is a JWT containing the revoked array, signed with RS256 for offline validation"
+    }
+  ],
+
+  "error_response_vectors": [
+    {
+      "description": "Validation error",
+      "status_code": 400,
+      "expected_response": {
+        "error": {
+          "code": "validation_error",
+          "message": "Request validation failed",
+          "details": [
+            {
+              "field": "type",
+              "message": "Invalid enum value",
+              "code": "invalid_enum_value"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Invalid channel for type",
+      "status_code": 400,
+      "expected_response": {
+        "error": {
+          "code": "invalid_channel_for_type",
+          "message": "Channel 'email' is not valid for verification type 'phone'"
+        }
+      }
+    },
+    {
+      "description": "Unauthorized - missing API key",
+      "status_code": 401,
+      "expected_response": {
+        "error": {
+          "code": "unauthorized",
+          "message": "API key required"
+        }
+      }
+    },
+    {
+      "description": "Forbidden - insufficient scope",
+      "status_code": 403,
+      "expected_response": {
+        "error": {
+          "code": "forbidden",
+          "message": "Insufficient permissions for this operation"
+        }
+      }
+    },
+    {
+      "description": "Not found",
+      "status_code": 404,
+      "expected_response": {
+        "error": {
+          "code": "not_found",
+          "message": "Verification not found"
+        }
+      }
+    },
+    {
+      "description": "Rate limited",
+      "status_code": 429,
+      "expected_response": {
+        "error": {
+          "code": "rate_limited",
+          "message": "Too many requests",
+          "retry_after": 60
+        }
+      }
+    }
+  ],
+
+  "jwks_vector": {
+    "description": "JWKS endpoint response format",
+    "endpoint": "GET /.well-known/jwks.json",
+    "expected_response": {
+      "keys": [
+        {
+          "kty": "RSA",
+          "n": "base64url-encoded-modulus",
+          "e": "AQAB",
+          "use": "sig",
+          "alg": "RS256",
+          "kid": "proof-holdings-2026-01"
+        }
+      ]
+    },
+    "notes": [
+      "n is the RSA modulus (base64url encoded)",
+      "e is the public exponent (usually AQAB = 65537)",
+      "kid matches the kid in proof token headers",
+      "Cache-Control: public, max-age=86400"
+    ]
+  },
+
+  "webhook_signature_vector": {
+    "description": "Webhook signature validation",
+    "timestamp": "1707048000",
+    "body": "{\"event\":\"verification.completed\",\"data\":{\"id\":\"507f1f77bcf86cd799439011\"}}",
+    "secret": "whsec_test_secret_key",
+    "expected_signature_input": "1707048000.{\"event\":\"verification.completed\",\"data\":{\"id\":\"507f1f77bcf86cd799439011\"}}",
+    "algorithm": "HMAC-SHA256",
+    "header_name": "X-Proof-Signature",
+    "validation_window_seconds": 300,
+    "notes": [
+      "Signature = HMAC-SHA256(timestamp + '.' + body, secret)",
+      "Reject if timestamp is more than 5 minutes old",
+      "Compare signatures using constant-time comparison"
+    ]
+  }
+}
