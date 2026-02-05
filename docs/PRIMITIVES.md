@@ -8,7 +8,7 @@
 
 **proof.holdings answers: "Does this person control this digital asset right now?"**
 
-Not identity. Just control.
+Not identity. The control.
 
 ---
 
@@ -133,7 +133,7 @@ Server shows code  →  User sends message TO server  →  Verified
 ```
 
 **Why it matters:**
-- Low cost (Telegram/WhatsApp inbound is free; SMS inbound has carrier costs)
+- Low cost (no per-message fees — you pay per proof, not per SMS)
 - Secure (user initiates, can't be phished)
 - Reliable (no carrier delivery issues for messaging apps)
 - Challenge code can be pre-populated via deep link (e.g., `https://wa.me/37069199199?text=X7K2M9`)

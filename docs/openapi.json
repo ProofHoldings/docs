@@ -43,15 +43,15 @@
     },
     {
       "name": "Auth",
-      "description": "Passwordless authentication for dashboard"
+      "description": "Authentication endpoints (dashboard login/logout). Coming to public API soon."
     },
     {
       "name": "Me",
-      "description": "Dashboard user management"
+      "description": "User account management endpoints (phones, emails, API keys). Coming to public API soon."
     },
     {
       "name": "Templates",
-      "description": "Message template customization"
+      "description": "Message template customization endpoints. Coming to public API soon."
     },
     {
       "name": "Webhook Deliveries",
