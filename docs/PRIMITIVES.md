@@ -8,7 +8,7 @@
 
 **proof.holdings answers: "Does this person control this digital asset right now?"**
 
-Not who they are. Not if they own it. Just: can they prove control?
+Not identity. Just control.
 
 ---
 
@@ -20,7 +20,7 @@ Not who they are. Not if they own it. Just: can they prove control?
 │    ASSET ──────► CHALLENGE ──────► USER ACTION ──────► PROOF               │
 │                                                                             │
 │    "phone"       "Send X7K2M9     User sends         Signed JWT            │
-│    "+1555..."     to our bot"     the message        (offline-verifiable)  │
+│    "+37069199199" via WhatsApp"   the message        (offline-verifiable)  │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -47,8 +47,8 @@ Ask proof.holdings to create a verification challenge.
 POST /api/v1/verifications
 {
   "type": "phone",
-  "channel": "telegram",
-  "identifier": "+15551234567"
+  "channel": "whatsapp",
+  "identifier": "+37069199199"
 }
 ```
 
@@ -56,13 +56,15 @@ Response:
 ```json
 {
   "id": "abc123",
+  "type": "phone",
+  "channel": "whatsapp",
   "status": "pending",
-  "challenge": { "code": "X7K2M9", "instruction": "Send X7K2M9 to @proof_holdings_bot" },
-  "deep_link": "https://t.me/proof_holdings_bot?start=X7K2M9" }  // removed instructions
-    "action": "send_message",
-    "target": "@proof_holdings_bot",
-    "message": "X7K2M9"
-  }
+  "identifier": "+37069199199",
+  "challenge": {
+    "code": "X7K2M9",
+    "instruction": "Send X7K2M9 via WhatsApp"
+  },
+  "deep_link": "https://wa.me/37069199199?text=X7K2M9"
 }
 ```
 
@@ -85,7 +87,8 @@ Response:
   "valid": true,
   "verification": {
     "type": "phone",
-    "channel": "telegram",
+    "channel": "whatsapp",
+    "identifier": "+37069199199",
     "verified_at": "2026-02-04T10:00:00Z",
     "expires_at": "2026-03-06T10:00:00Z"
   }
@@ -107,7 +110,7 @@ POST /api/v1/proofs/{id}/revoke
 
 | Type | Channels | Example |
 |------|----------|---------|
-| `phone` | telegram, whatsapp, sms, viber | +15551234567 |
+| `phone` | whatsapp, telegram, sms, viber | +37069199199 |
 | `email` | email | user@example.com |
 | `domain` | dns, http | example.com |
 | `social` | github, google, twitter, ... | @username |
@@ -133,7 +136,7 @@ Server shows code  →  User sends message TO server  →  Verified
 - Low cost (Telegram/WhatsApp inbound is free; SMS inbound has carrier costs)
 - Secure (user initiates, can't be phished)
 - Reliable (no carrier delivery issues for messaging apps)
-- Challenge code can be pre-populated via deep link (e.g., `https://t.me/bot?start=X7K2M9`)
+- Challenge code can be pre-populated via deep link (e.g., `https://wa.me/37069199199?text=X7K2M9`)
 
 ---
 
@@ -148,8 +151,8 @@ Server shows code  →  User sends message TO server  →  Verified
 
   "proof_schema_version": "1.0",
   "type": "phone",
-  "channel": "telegram",
-  "identifier_hash": "sha256:8a59780b...",
+  "channel": "whatsapp",
+  "identifier_hash": "sha256:1a84d7ea...",
   "verified_at": "2026-02-04T10:00:00Z",
   "user_id": "owner_id"
 }
@@ -213,21 +216,21 @@ return !isRevoked && payload.exp > Date.now() / 1000;
 │     │                                  │                             │       │
 │     │  POST /verifications             │                             │       │
 │     │  { type: "phone",                │                             │       │
-│     │    channel: "telegram",          │                             │       │
-│     │    identifier: "+1..." }         │                             │       │
+│     │    channel: "whatsapp",          │                             │       │
+│     │    identifier: "+370..." }       │                             │       │
 │     │ ─────────────────────────────►   │                             │       │
 │     │                                  │                             │       │
-│     │  { challenge: { code: "X7K2M9" },     │                             │       │
-│     │    instructions: {...} }         │                             │       │
+│     │  { challenge: { code: "X7K2M9" },│                             │       │
+│     │    deep_link: "wa.me/..." }      │                             │       │
 │     │ ◄─────────────────────────────   │                             │       │
 │     │                                  │                             │       │
 │     │                                  │                             │       │
-│     │  Show: "Send X7K2M9 to           │                             │       │
-│     │         @proof_holdings_bot"     │                             │       │
+│     │  Show: "Send X7K2M9             │                             │       │
+│     │         via WhatsApp"            │                             │       │
 │     │ ─────────────────────────────────────────────────────────────► │       │
 │     │                                  │                             │       │
 │     │                                  │   User sends "X7K2M9"       │       │
-│     │                                  │   to Telegram bot           │       │
+│     │                                  │   via WhatsApp              │       │
 │     │                                  │ ◄─────────────────────────  │       │
 │     │                                  │                             │       │
 │     │                                  │  (Webhook to your app)      │       │
@@ -267,9 +270,9 @@ return !isRevoked && payload.exp > Date.now() / 1000;
 curl -X POST https://api.proof.holdings/api/v1/verifications \
   -H "Authorization: Bearer pk_live_..." \
   -H "Content-Type: application/json" \
-  -d '{"type":"phone","channel":"telegram","identifier":"+15551234567"}'
+  -d '{"type":"phone","channel":"whatsapp","identifier":"+37069199199"}'
 
-# 2. User sends challenge code to @proof_holdings_bot
+# 2. User sends challenge code via WhatsApp (or clicks deep_link)
 
 # 3. Poll for completion (or use webhook)
 curl https://api.proof.holdings/api/v1/verifications/{id} \
@@ -296,4 +299,11 @@ Everything else is implementation detail.
 
 ---
 
-*Read the full [AI Developer Guide](./AI_DEVELOPER_GUIDE.md) for security details, threat model, and test vectors.*
+## Resources
+
+- [API Explorer](https://api.proof.holdings/api/docs) — Interactive Swagger UI
+- [OpenAPI Spec](https://api.proof.holdings/api/openapi.json) — Machine-readable API definition
+- [JWKS Public Keys](https://api.proof.holdings/.well-known/jwks.json) — For offline proof verification
+- [API Status](https://api.proof.holdings/health) — Health check endpoint
+- [GitHub Docs](https://github.com/ProofHoldings/docs) — Source of truth for all documentation
+- [Security & Threat Model](/docs/threat-model) — Guarantees, non-guarantees, and attack vectors

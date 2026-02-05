@@ -6,17 +6,17 @@
   "generated": "2026-02-04",
   "normalization_vectors": [
     {
-      "description": "US phone number with country code",
+      "description": "Lithuanian phone number with country code",
       "type": "phone",
-      "input": "+1 (555) 123-4567",
-      "expected_normalized": "+15551234567"
+      "input": "+370 691 99199",
+      "expected_normalized": "+37069199199"
     },
     {
-      "description": "US phone number without country code",
+      "description": "Lithuanian phone number with spaces",
       "type": "phone",
-      "input": "555-123-4567",
-      "expected_normalized": "+15551234567",
-      "note": "Assumes US default region"
+      "input": "+370-691-99-199",
+      "expected_normalized": "+37069199199",
+      "note": "Normalized to E.164 format"
     },
     {
       "description": "UK phone number",
@@ -75,8 +75,8 @@
   "identifier_hash_vectors": [
     {
       "description": "Phone number hash",
-      "normalized_identifier": "+15551234567",
-      "expected_hash": "8a59780bb8cd2ba022bfa5ba2ea3b6e07af17a7d8b30c1f9b3390e36f69019e4",
+      "normalized_identifier": "+37069199199",
+      "expected_hash": "1a84d7ea4cfcfa4a7fde9c221c967e6f1cfa22fd5b68e4cbac0912ceb8b602f9",
       "algorithm": "sha256",
       "note": "Hash is hex-encoded, used in proof token identifier_hash claim"
     },
@@ -110,7 +110,7 @@
         "user_id": "507f1f77bcf86cd799439012",
         "type": "phone",
         "channel": "telegram",
-        "normalized_identifier": "+15551234567",
+        "normalized_identifier": "+37069199199",
         "verified_at": "2026-02-04T10:00:00.000Z",
         "expires_in_seconds": 2592000
       },
@@ -121,7 +121,7 @@
         "user_id": "507f1f77bcf86cd799439012",
         "type": "phone",
         "channel": "telegram",
-        "identifier_hash": "8a59780bb8cd2ba022bfa5ba2ea3b6e07af17a7d8b30c1f9b3390e36f69019e4",
+        "identifier_hash": "1a84d7ea4cfcfa4a7fde9c221c967e6f1cfa22fd5b68e4cbac0912ceb8b602f9",
         "verified_at": "2026-02-04T10:00:00.000Z"
       },
       "expected_header": {
@@ -190,7 +190,7 @@
         "sms"
       ],
       "identifier_format": "E.164 phone number",
-      "identifier_example": "+15551234567",
+      "identifier_example": "+37069199199",
       "ttl_seconds": 600
     },
     {
@@ -247,7 +247,7 @@
       "request": {
         "type": "phone",
         "channel": "telegram",
-        "identifier": "+15551234567"
+        "identifier": "+37069199199"
       },
       "expected_response": {
         "id": "507f1f77bcf86cd799439011",
@@ -272,7 +272,7 @@
         "status": "pending",
         "type": "phone",
         "channel": "telegram",
-        "identifier": "+15551234567",
+        "identifier": "+37069199199",
         "attempts": 0,
         "max_attempts": 3,
         "created_at": "2026-02-04T10:00:00.000Z",
@@ -288,7 +288,7 @@
         "status": "verified",
         "type": "phone",
         "channel": "telegram",
-        "identifier": "+15551234567",
+        "identifier": "+37069199199",
         "verified_at": "2026-02-04T10:05:00.000Z",
         "proof_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InByb29mLWhvbGRpbmdzLTIwMjYtMDEifQ...",
         "proof_expires_at": "2026-03-06T10:05:00.000Z",

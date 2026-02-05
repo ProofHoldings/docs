@@ -17,7 +17,7 @@ proof.holdings issues signed JWT proofs that a user controls a digital asset (ph
 │    ASSET ──────► CHALLENGE ──────► USER ACTION ──────► PROOF               │
 │                                                                             │
 │    "phone"       "Send X7K2M9     User sends         Signed JWT            │
-│    "+1555..."     to our bot"     the message        (offline-verifiable)  │
+│    "+370..."      via WhatsApp"   the message        (offline-verifiable)  │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -33,11 +33,11 @@ proof.holdings issues signed JWT proofs that a user controls a digital asset (ph
 curl -X POST https://api.proof.holdings/api/v1/verifications \
   -H "Authorization: Bearer pk_live_..." \
   -H "Content-Type: application/json" \
-  -d '{"type":"phone","channel":"telegram","identifier":"+15551234567"}'
+  -d '{"type":"phone","channel":"whatsapp","identifier":"+37069199199"}'
 
-# Response: { "id": "...", "challenge": { "code": "X7K2M9", "instruction": "..." } }
+# Response: { "id": "...", "challenge": { "code": "X7K2M9", "deep_link": "wa.me/..." } }
 
-# 2. User sends challenge code to @proof_holdings_bot on Telegram
+# 2. User sends challenge code via WhatsApp (or clicks deep_link)
 
 # 3. Poll for completion (or use webhook)
 curl https://api.proof.holdings/api/v1/verifications/{id} \
@@ -66,7 +66,7 @@ curl https://api.proof.holdings/.well-known/jwks.json
 
 | Type | Channels | Status |
 |------|----------|--------|
-| **Phone** | Telegram, SMS, WhatsApp | ✅ Live |
+| **Phone** | WhatsApp, Telegram, SMS | ✅ Live |
 | **Email** | OTP + Magic Link | ✅ Live |
 | **Domain** | DNS, HTTP, Email, Auto-DNS (53 providers) | ✅ Live |
 | **Social** | GitHub, Google, Discord, etc. | Coming Soon |

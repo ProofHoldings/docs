@@ -105,7 +105,7 @@ And you get more: offline-verifiable proofs, multi-channel support, webhooks, au
 | Business name | "Proof of Holdings" | "Your Company Name" |
 | Email logo | proof.holdings logo | Your logo |
 | Email colors | Default blue | Your brand colors |
-| Support email | support@proof.holdings | support@yourcompany.com |
+| Support email | hello@proof.holdings | support@yourcompany.com |
 | Message templates | Default text | Custom text |
 
 ---
@@ -262,7 +262,7 @@ Includes: All channels, offline verification, webhooks, audit trail
 curl -X POST https://api.proof.holdings/api/v1/verifications \
   -H "Authorization: Bearer pk_live_..." \
   -H "Content-Type: application/json" \
-  -d '{"type":"phone","channel":"telegram","identifier":"+15551234567"}'
+  -d '{"type":"phone","channel":"whatsapp","identifier":"+37069199199"}'
 ```
 
 ---
