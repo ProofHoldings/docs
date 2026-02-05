@@ -35,7 +35,7 @@ curl -X POST https://api.proof.holdings/api/v1/verifications \
   -H "Content-Type: application/json" \
   -d '{"type":"phone","channel":"telegram","identifier":"+15551234567"}'
 
-# Response: { "id": "...", "challenge_code": "X7K2M9", "instructions": {...} }
+# Response: { "id": "...", "challenge": { "code": "X7K2M9", "instruction": "..." } }
 
 # 2. User sends challenge code to @proof_holdings_bot on Telegram
 

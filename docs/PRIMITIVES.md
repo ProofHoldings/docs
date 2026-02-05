@@ -57,8 +57,8 @@ Response:
 {
   "id": "abc123",
   "status": "pending",
-  "challenge_code": "X7K2M9",
-  "instructions": {
+  "challenge": { "code": "X7K2M9", "instruction": "Send X7K2M9 to @proof_holdings_bot" },
+  "deep_link": "https://t.me/proof_holdings_bot?start=X7K2M9" }  // removed instructions
     "action": "send_message",
     "target": "@proof_holdings_bot",
     "message": "X7K2M9"
@@ -217,7 +217,7 @@ return !isRevoked && payload.exp > Date.now() / 1000;
 │     │    identifier: "+1..." }         │                             │       │
 │     │ ─────────────────────────────►   │                             │       │
 │     │                                  │                             │       │
-│     │  { challenge_code: "X7K2M9",     │                             │       │
+│     │  { challenge: { code: "X7K2M9" },     │                             │       │
 │     │    instructions: {...} }         │                             │       │
 │     │ ◄─────────────────────────────   │                             │       │
 │     │                                  │                             │       │
