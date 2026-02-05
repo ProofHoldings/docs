@@ -153,7 +153,7 @@ Auto-DNS supports 53 DNS providers for automatic record creation.
 
 **Pros:**
 - User-initiated (secure by design)
-- Low cost (WhatsApp/Telegram inbound is free; SMS has carrier costs)
+- Low cost (no per-message fees — you pay per proof, not per SMS)
 - Offline-verifiable proofs (RS256)
 - Multi-asset (phone, email, domain, social, wallet)
 - Portable proofs (reuse across systems)
