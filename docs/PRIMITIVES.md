@@ -112,7 +112,7 @@ POST /api/v1/proofs/{id}/revoke
 |------|----------|---------|
 | `phone` | whatsapp, telegram, sms, viber | +37069199199 |
 | `email` | email | user@example.com |
-| `domain` | dns, http | example.com |
+| `domain` | dns, http, email, auto | example.com |
 | `social` | github, google, twitter, ... | @username |
 | `wallet` | ethereum, solana, bitcoin | 0xAb5801... |
 

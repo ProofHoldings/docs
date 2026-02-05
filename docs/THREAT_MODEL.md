@@ -2,6 +2,33 @@
 
 > Security analysis for developers integrating proof.holdings
 
+## TL;DR
+
+proof.holdings verifies **control of digital assets** (phone, email, domain, wallet) without revealing identity. We issue signed proof tokens (RS256 JWT) that can be verified offline via JWKS.
+
+**Key security properties:**
+- Reverse OTP model (user sends to us, not vice versa)
+- Constant-time challenge comparison (timing attack resistant)
+- Asymmetric signatures (private key never leaves server)
+- 13 threat categories actively mitigated
+
+**What we don't do:** Identity verification, KYC, fraud prevention, permanent records.
+
+---
+
+## Table of Contents
+
+- [What is proof.holdings?](#what-is-proofholdings)
+- [Security Properties](#security-properties)
+- [Threat Analysis](#threat-analysis)
+  - [Threats We Protect Against](#threats-we-protect-against)
+  - [Threats We Do NOT Protect Against](#threats-we-do-not-protect-against)
+- [Explicit Non-Goals](#explicit-non-goals)
+- [Security Recommendations for Integrators](#security-recommendations-for-integrators)
+- [Cryptographic Details](#cryptographic-details)
+- [Incident Response](#incident-response)
+- [Version History](#version-history)
+
 ---
 
 ## What is proof.holdings?
@@ -359,10 +386,19 @@ Note: Production warns if webhook secret not configured — receivers cannot ver
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.2 | 2026-02-04 | Added: SSRF protection, WAF blocklist, session hijacking, clickjacking/XSS, BYOC encryption, wallet validation |
+| 1.2 | 2026-02-04 | Added: SSRF protection, WAF blocklist, session hijacking, clickjacking/XSS, BYOC encryption, wallet validation, TL;DR, TOC, related docs |
 | 1.1 | 2026-02-04 | Added: exponential backoff, request size limits, DoS protection, HSTS preload |
 | 1.0 | 2026-02-04 | Initial threat model |
 
 ---
 
 *This document is intended for developers integrating proof.holdings. For security researchers, please report vulnerabilities to hello@proof.holdings.*
+
+---
+
+## Related Documentation
+
+- [API Reference](./API.md) — Endpoints, authentication, webhooks
+- [Primitives](./PRIMITIVES.md) — Core mental model
+- [Pricing](./PRICING.md) — Plans and verification limits
+- [Test Vectors](./test-vectors.json) — Golden test cases for SDK authors

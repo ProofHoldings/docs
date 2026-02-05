@@ -66,10 +66,10 @@ curl https://api.proof.holdings/.well-known/jwks.json
 
 | Type | Channels | Status |
 |------|----------|--------|
-| **Phone** | WhatsApp, Telegram, SMS | ✅ Live |
+| **Phone** | WhatsApp, Telegram, Viber, SMS | ✅ Live |
 | **Email** | OTP + Magic Link | ✅ Live |
 | **Domain** | DNS, HTTP, Email, Auto-DNS (53 providers) | ✅ Live |
-| **Social** | GitHub, Google, Discord, etc. | Coming Soon |
+| **Social** | GitHub, Google, Twitter, etc. | Coming Soon |
 | **Wallet** | Ethereum, Solana, Bitcoin | Coming Soon |
 
 ---
@@ -121,7 +121,7 @@ Auto-DNS verification supports **55 providers**. [Full list →](integrations/dn
 
 **EU Regional:** Hetzner, TransIP, INWX, Netcup, Infomaniak, Domeneshop, Scaleway
 
-[See all 48 providers →](integrations/dns-providers/README.md)
+[See all 55 providers →](integrations/dns-providers/README.md)
 
 ---
 

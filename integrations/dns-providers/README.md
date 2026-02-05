@@ -2,7 +2,7 @@
 
 Auto-DNS verification allows instant domain verification by automatically creating TXT records via provider APIs. No manual DNS configuration required.
 
-**55 providers supported.**
+**55 API adapters implemented** | **[156 providers detected](DNS_DETECTION.md)**
 
 ---
 
@@ -128,3 +128,11 @@ If API access unavailable:
 ## Adding New Providers
 
 Contact hello@proof.holdings to request additional provider support.
+
+---
+
+## Related Documentation
+
+- [DNS Detection](DNS_DETECTION.md) — All 156 providers we detect via NS patterns
+- [Integration Guide](https://proof.holdings/docs/integration) — How to use DNS verification
+- [Threat Model](../../THREAT_MODEL.md) — Security considerations

@@ -251,7 +251,6 @@
       },
       "expected_response": {
         "id": "507f1f77bcf86cd799439011",
-        "status": "pending",
         "type": "phone",
         "channel": "telegram",
         "challenge": {
