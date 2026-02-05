@@ -352,7 +352,7 @@
             "minLength": 1,
             "maxLength": 500,
             "description": "The asset identifier to verify",
-            "example": "+15551234567"
+            "example": "+37069199199"
           },
           "external_user_id": {
             "type": "string",
@@ -466,7 +466,7 @@
           "identifier": {
             "type": "string",
             "description": "Masked identifier",
-            "example": "+1555***4567"
+            "example": "+370***9199"
           },
           "status": {
             "$ref": "#/components/schemas/VerificationStatus"
@@ -547,7 +547,7 @@
             "minLength": 1,
             "maxLength": 500,
             "description": "Optional identifier for additional validation",
-            "example": "+15551234567"
+            "example": "+37069199199"
           }
         },
         "required": [
@@ -637,7 +637,7 @@
             "minLength": 1,
             "maxLength": 500,
             "description": "Specific identifier or null for user-provided",
-            "example": "+15551234567"
+            "example": "+37069199199"
           },
           "channel": {
             "allOf": [
@@ -853,7 +853,7 @@
             "type": "string",
             "minLength": 1,
             "description": "Phone number in E.164 format",
-            "example": "+15551234567"
+            "example": "+37069199199"
           },
           "channel": {
             "type": "string",

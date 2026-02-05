@@ -62,8 +62,8 @@ curl -X POST https://api.proof.holdings/api/v1/verifications \
   -H "Content-Type: application/json" \
   -d '{
     "type": "phone",
-    "channel": "telegram",
-    "identifier": "+15551234567",
+    "channel": "whatsapp",
+    "identifier": "+37069199199",
     "client_metadata": {
       "user_id": "usr_123",
       "action": "login"
@@ -77,15 +77,14 @@ curl -X POST https://api.proof.holdings/api/v1/verifications \
 {
   "id": "507f1f77bcf86cd799439011",
   "type": "phone",
-  "channel": "telegram",
+  "channel": "whatsapp",
   "status": "pending",
-  "identifier": "+15551234567",
+  "identifier": "+37069199199",
   "challenge": {
     "code": "X7K2M9",
     "expires_at": "2026-02-04T11:00:00Z",
-    "send_to": "@proof_holdings_bot",
-    "instruction": "Send the code to our Telegram bot",
-    "deep_link": "https://t.me/proof_holdings_bot?start=X7K2M9"
+    "instruction": "Send X7K2M9 via WhatsApp",
+    "deep_link": "https://wa.me/37069199199?text=X7K2M9"
   },
   "created_at": "2026-02-04T10:50:00Z"
 }
@@ -105,9 +104,9 @@ Poll for verification status.
 {
   "id": "507f1f77bcf86cd799439011",
   "type": "phone",
-  "channel": "telegram",
+  "channel": "whatsapp",
   "status": "verified",
-  "identifier": "+15551234567",
+  "identifier": "+37069199199",
   "verified_at": "2026-02-04T10:51:30Z",
   "proof": {
     "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -139,7 +138,7 @@ Validate a proof token via API.
   "verification": {
     "id": "507f1f77bcf86cd799439011",
     "type": "phone",
-    "channel": "telegram",
+    "channel": "whatsapp",
     "verified_at": "2026-02-04T10:51:30Z",
     "expires_at": "2026-03-06T10:51:30Z"
   }

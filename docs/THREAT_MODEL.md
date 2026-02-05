@@ -34,7 +34,7 @@ It is NOT:
 | Non-Guarantee | Why |
 |---------------|-----|
 | **Current control** | Proof attests to control at verification time, not now |
-| **Identity** | Control ≠ identity (you can control a shared phone) |
+| **Identity** | Control ≠ identity. We verify control of an asset, not who you are |
 | **Exclusive control** | Multiple people may control same asset |
 | **Future control** | Assets can be transferred, numbers ported, domains sold |
 | **Intent** | We verify control, not what user intends to do |
