@@ -6,9 +6,9 @@ proof.holdings issues signed JWT proofs that a user controls a digital asset (ph
 
 [![API Status](https://img.shields.io/badge/API-Live-brightgreen)](https://api.proof.holdings/health)
 [![JWKS](https://img.shields.io/badge/JWKS-RS256-blue)](https://api.proof.holdings/.well-known/jwks.json)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0-6BA539)](https://api.proof.holdings/api/docs)
 
 ---
-
 ## The Abstraction
 
 ```
@@ -93,6 +93,7 @@ curl https://api.proof.holdings/.well-known/jwks.json
 | `GET /.well-known/jwks.json` | RS256 public keys for offline verification | 24h |
 | `GET /api/v1/proofs/revoked` | Signed revocation list | 5min |
 | `GET /health` | Service status | No cache |
+| `GET /api/openapi.json` | OpenAPI 3.0 specification | 1h |
 
 ---
 
@@ -105,6 +106,7 @@ curl https://api.proof.holdings/.well-known/jwks.json
 | [**THREAT_MODEL.md**](docs/THREAT_MODEL.md) | Security guarantees and non-goals |
 | [**COMPARISON.md**](docs/COMPARISON.md) | vs SMS OTP, TOTP, WebAuthn |
 | [**PRICING.md**](docs/PRICING.md) | Pricing tiers |
+| [**openapi.json**](docs/openapi.json) | OpenAPI 3.0 spec for SDK generation |
 | [**test-vectors.json**](docs/test-vectors.json) | Golden test cases for SDK authors |
 
 ---
@@ -147,6 +149,7 @@ Server shows code → User sends TO server → Verified → Signed proof
 - **API:** https://api.proof.holdings
 - **Docs:** https://proof.holdings/docs
 - **Status:** https://api.proof.holdings/health
+- **API Explorer:** https://api.proof.holdings/api/docs
 
 ---
 

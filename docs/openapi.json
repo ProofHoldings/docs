@@ -1,0 +1,2481 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "proof.holdings API",
+    "version": "1.0.0",
+    "description": "**Proof of Control as a Service**\n\nproof.holdings provides cryptographic proofs of digital asset control. Users complete challenges from their assets (phone, email, domain, social, wallet) to receive signed JWT proofs that are offline-verifiable.\n\n## Core Concepts\n\n- **Verification**: A challenge-response flow to prove control of an asset\n- **Proof Token**: Signed JWT issued after successful verification (RS256)\n- **JWKS**: Public keys for offline verification at `/.well-known/jwks.json`\n\n## Authentication\n\nMost endpoints require API key authentication via Bearer token:\n```\nAuthorization: Bearer pk_live_...\n```\n\nDashboard endpoints use JWT authentication via httpOnly cookies.\n\n## Rate Limits\n\nAll authenticated endpoints include rate limit headers:\n- `X-RateLimit-Limit`: Maximum requests per window\n- `X-RateLimit-Remaining`: Requests remaining in current window\n- `X-RateLimit-Reset`: Unix timestamp when window resets",
+    "contact": {
+      "name": "proof.holdings Support",
+      "email": "hello@proof.holdings",
+      "url": "https://proof.holdings"
+    },
+    "license": {
+      "name": "Proprietary",
+      "url": "https://proof.holdings/terms"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.proof.holdings",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Verifications",
+      "description": "Create and manage verification challenges"
+    },
+    {
+      "name": "Verification Requests",
+      "description": "Multi-asset verification flows"
+    },
+    {
+      "name": "Proofs",
+      "description": "Validate and revoke proof tokens"
+    },
+    {
+      "name": "Sessions",
+      "description": "Phone-first verification sessions"
+    },
+    {
+      "name": "Auth",
+      "description": "Passwordless authentication for dashboard"
+    },
+    {
+      "name": "Me",
+      "description": "Dashboard user management"
+    },
+    {
+      "name": "Templates",
+      "description": "Message template customization"
+    },
+    {
+      "name": "Webhook Deliveries",
+      "description": "Webhook delivery management"
+    },
+    {
+      "name": "Public",
+      "description": "Public endpoints (no authentication)"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key",
+        "description": "API key authentication. Use format: `pk_live_...` or `pk_test_...`"
+      },
+      "CookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "auth_token",
+        "description": "JWT authentication via httpOnly cookie (dashboard only)"
+      }
+    },
+    "schemas": {
+      "VerificationType": {
+        "type": "string",
+        "enum": [
+          "phone",
+          "email",
+          "domain",
+          "social",
+          "wallet",
+          "account"
+        ],
+        "description": "Type of asset being verified",
+        "example": "phone"
+      },
+      "VerificationChannel": {
+        "type": "string",
+        "enum": [
+          "whatsapp",
+          "telegram",
+          "viber",
+          "sms",
+          "email",
+          "dns",
+          "http",
+          "auto",
+          "github",
+          "google",
+          "facebook",
+          "twitter",
+          "linkedin",
+          "instagram",
+          "youtube",
+          "tiktok",
+          "ethereum",
+          "solana",
+          "bitcoin",
+          "coinbase",
+          "kraken"
+        ],
+        "description": "Channel used for verification",
+        "example": "whatsapp"
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "verified",
+          "failed",
+          "expired",
+          "revoked"
+        ],
+        "description": "Current status of the verification",
+        "example": "pending"
+      },
+      "RevocationReason": {
+        "type": "string",
+        "enum": [
+          "user_request",
+          "fraud",
+          "key_compromise",
+          "asset_transferred",
+          "other"
+        ],
+        "description": "Reason for revoking a proof",
+        "example": "user_request"
+      },
+      "ActionType": {
+        "type": "string",
+        "enum": [
+          "verification",
+          "2fa",
+          "login",
+          "custom"
+        ],
+        "description": "Type of action for verification request",
+        "example": "verification"
+      },
+      "VerificationRequestStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "partial",
+          "completed",
+          "expired",
+          "cancelled"
+        ],
+        "description": "Status of a verification request",
+        "example": "pending"
+      },
+      "ObjectId": {
+        "type": "string",
+        "pattern": "^[0-9a-fA-F]{24}$",
+        "description": "MongoDB ObjectId",
+        "example": "507f1f77bcf86cd799439011"
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "default": 1,
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 100,
+            "default": 20,
+            "example": 20
+          }
+        },
+        "description": "Pagination parameters"
+      },
+      "PaginationResponse": {
+        "type": "object",
+        "properties": {
+          "hasMore": {
+            "type": "boolean",
+            "example": true
+          },
+          "nextCursor": {
+            "type": "string",
+            "example": "507f1f77bcf86cd799439012"
+          },
+          "total": {
+            "type": "integer",
+            "example": 42
+          }
+        },
+        "required": [
+          "hasMore"
+        ],
+        "description": "Pagination info in list responses"
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "example": "identifier"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid phone number format"
+          },
+          "code": {
+            "type": "string",
+            "example": "invalid_string"
+          }
+        },
+        "required": [
+          "field",
+          "message",
+          "code"
+        ],
+        "description": "Field-level validation error detail"
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "validation_error"
+              },
+              "message": {
+                "type": "string",
+                "example": "Request validation failed"
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ErrorDetail"
+                }
+              },
+              "request_id": {
+                "type": "string",
+                "example": "req_abc123"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "description": "Standard error response format"
+      },
+      "DNSProviderCredentials": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "DNS provider name",
+            "example": "cloudflare"
+          },
+          "api_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "API token (Cloudflare, DigitalOcean, etc.)"
+          },
+          "api_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "API key (GoDaddy, Namecheap, etc.)"
+          },
+          "api_secret": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "API secret (GoDaddy)"
+          },
+          "account_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Account identifier"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Username (Namecheap)"
+          },
+          "access_key_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "AWS access key ID (Route53)"
+          },
+          "secret_access_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "AWS secret access key (Route53)"
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "AWS region (Route53)",
+            "example": "us-east-1"
+          }
+        },
+        "required": [
+          "provider"
+        ],
+        "description": "DNS provider credentials for auto-DNS verification"
+      },
+      "CreateVerificationRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/VerificationType"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/VerificationChannel"
+          },
+          "identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "The asset identifier to verify",
+            "example": "+15551234567"
+          },
+          "external_user_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Your user ID for grouping verifications",
+            "example": "user_12345"
+          },
+          "client_metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Custom metadata to attach to verification",
+            "example": {
+              "source": "onboarding"
+            }
+          },
+          "dns_provider": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DNSProviderCredentials"
+              },
+              {
+                "description": "Required for channel=auto (domain verification)"
+              }
+            ]
+          },
+          "email_prefix": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "administrator",
+              "webmaster",
+              "hostmaster",
+              "postmaster"
+            ],
+            "description": "Email prefix for domain email verification",
+            "example": "admin"
+          }
+        },
+        "required": [
+          "type",
+          "channel",
+          "identifier"
+        ],
+        "description": "Request body for creating a new verification"
+      },
+      "Challenge": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 6,
+            "description": "Challenge code to send/enter",
+            "example": "X7K2M9"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Human-readable instruction for the user",
+            "example": "Send X7K2M9 to +370 691 99199 on WhatsApp"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the challenge expires",
+            "example": "2024-01-15T12:00:00Z"
+          }
+        },
+        "required": [
+          "code",
+          "instruction",
+          "expires_at"
+        ],
+        "description": "Challenge details for verification"
+      },
+      "Proof": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Signed JWT proof token (RS256)",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the proof expires",
+            "example": "2025-01-15T12:00:00Z"
+          }
+        },
+        "required": [
+          "token",
+          "expires_at"
+        ],
+        "description": "Proof token after successful verification"
+      },
+      "Verification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "type": {
+            "$ref": "#/components/schemas/VerificationType"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/VerificationChannel"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "Masked identifier",
+            "example": "+1555***4567"
+          },
+          "status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          },
+          "challenge": {
+            "$ref": "#/components/schemas/Challenge"
+          },
+          "proof": {
+            "$ref": "#/components/schemas/Proof"
+          },
+          "external_user_id": {
+            "type": "string"
+          },
+          "attempts": {
+            "type": "integer",
+            "example": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "example": 5
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "channel",
+          "identifier",
+          "status",
+          "attempts",
+          "max_attempts",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "Verification object"
+      },
+      "VerificationListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Verification"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationResponse"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "description": "Paginated list of verifications"
+      },
+      "ValidateProofRequest": {
+        "type": "object",
+        "properties": {
+          "proof_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "JWT proof token to validate",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Optional identifier for additional validation",
+            "example": "+15551234567"
+          }
+        },
+        "required": [
+          "proof_token"
+        ],
+        "description": "Request body for validating a proof token"
+      },
+      "ValidateProofResponse": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "example": true
+          },
+          "proof": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "$ref": "#/components/schemas/VerificationType"
+              },
+              "channel": {
+                "$ref": "#/components/schemas/VerificationChannel"
+              },
+              "identifier_hash": {
+                "type": "string",
+                "description": "SHA-256 hash of the verified identifier",
+                "example": "a1b2c3d4e5f6..."
+              },
+              "verified_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "issuer": {
+                "type": "string",
+                "example": "proof.holdings"
+              }
+            },
+            "required": [
+              "type",
+              "channel",
+              "identifier_hash",
+              "verified_at",
+              "expires_at",
+              "issuer"
+            ]
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if validation failed",
+            "example": "Token has expired"
+          }
+        },
+        "required": [
+          "valid"
+        ],
+        "description": "Proof validation result"
+      },
+      "RevokeProofRequest": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevocationReason"
+              },
+              {
+                "default": "user_request"
+              }
+            ]
+          }
+        },
+        "description": "Request body for revoking a proof"
+      },
+      "RequestedAsset": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/VerificationType"
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Specific identifier or null for user-provided",
+            "example": "+15551234567"
+          },
+          "channel": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VerificationChannel"
+              },
+              {
+                "nullable": true,
+                "description": "Preferred verification channel"
+              }
+            ]
+          },
+          "allowed_channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VerificationChannel"
+            },
+            "maxItems": 10,
+            "description": "Restrict to specific channels",
+            "example": [
+              "whatsapp",
+              "telegram"
+            ]
+          },
+          "required": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether this asset is required for completion"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "description": "Asset to be verified in a multi-asset request"
+      },
+      "ActionContext": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Custom action title",
+            "example": "Verify your identity"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Custom action description"
+          }
+        },
+        "description": "Context for custom action types"
+      },
+      "CreateVerificationRequestBody": {
+        "type": "object",
+        "properties": {
+          "reference_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Your reference ID for this request",
+            "example": "order_12345"
+          },
+          "public_profile_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ObjectId"
+              },
+              {
+                "description": "Public profile ID for branding"
+              }
+            ]
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestedAsset"
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "description": "Assets to verify"
+          },
+          "action_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ActionType"
+              },
+              {
+                "default": "verification"
+              }
+            ]
+          },
+          "action_context": {
+            "$ref": "#/components/schemas/ActionContext"
+          },
+          "validity_requirement": {
+            "type": "string",
+            "pattern": "^\\d+[hdwm]$",
+            "description": "Required proof freshness (e.g., \"7d\", \"24h\")",
+            "example": "7d"
+          },
+          "partial_ok": {
+            "type": "boolean",
+            "default": false,
+            "description": "Complete even if only some assets verified"
+          },
+          "redirect_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "HTTPS URL to redirect after completion",
+            "example": "https://yourapp.com/callback"
+          },
+          "callback_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "HTTPS URL for webhook notifications",
+            "example": "https://yourapp.com/webhook"
+          },
+          "expires_in": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 604800,
+            "default": 86400,
+            "description": "Time until expiry in seconds (max 7 days)",
+            "example": 86400
+          }
+        },
+        "required": [
+          "assets"
+        ],
+        "description": "Request body for creating a multi-asset verification request"
+      },
+      "VerificationRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "reference_id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/VerificationRequestStatus"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "$ref": "#/components/schemas/VerificationType"
+                },
+                "identifier": {
+                  "type": "string"
+                },
+                "status": {
+                  "$ref": "#/components/schemas/VerificationStatus"
+                },
+                "verification_id": {
+                  "$ref": "#/components/schemas/ObjectId"
+                }
+              },
+              "required": [
+                "type",
+                "status"
+              ]
+            }
+          },
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "partial_ok": {
+            "type": "boolean"
+          },
+          "redirect_url": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "assets",
+          "action_type",
+          "partial_ok",
+          "expires_at",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "Multi-asset verification request"
+      },
+      "CreateSessionRequest": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Phone number in E.164 format",
+            "example": "+15551234567"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "whatsapp",
+              "telegram",
+              "viber",
+              "sms"
+            ],
+            "default": "whatsapp",
+            "description": "Preferred messaging channel"
+          }
+        },
+        "required": [
+          "phone"
+        ],
+        "description": "Request body for creating a phone verification session"
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "verified",
+              "expired"
+            ]
+          },
+          "challenge": {
+            "$ref": "#/components/schemas/Challenge"
+          },
+          "proof": {
+            "$ref": "#/components/schemas/Proof"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "created_at",
+          "expires_at"
+        ],
+        "description": "Phone verification session"
+      },
+      "SubmitChallengeRequest": {
+        "type": "object",
+        "properties": {
+          "challenge_code": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 6,
+            "pattern": "^[A-Z0-9]+$",
+            "description": "The 6-character challenge code",
+            "example": "X7K2M9"
+          },
+          "source_identifier": {
+            "type": "string",
+            "description": "Phone/email that sent the code (for validation)"
+          }
+        },
+        "required": [
+          "challenge_code"
+        ],
+        "description": "Request body for submitting a challenge code"
+      },
+      "RevokedProof": {
+        "type": "object",
+        "properties": {
+          "proof_id": {
+            "type": "string"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/RevocationReason"
+          }
+        },
+        "required": [
+          "proof_id",
+          "revoked_at",
+          "reason"
+        ],
+        "description": "Entry in the revocation list"
+      },
+      "RevocationList": {
+        "type": "object",
+        "properties": {
+          "revoked": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RevokedProof"
+            }
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Signature for offline verification"
+          }
+        },
+        "required": [
+          "revoked",
+          "generated_at",
+          "signature"
+        ],
+        "description": "Signed list of revoked proofs"
+      },
+      "WebhookEventType": {
+        "type": "string",
+        "enum": [
+          "verification_request.completed",
+          "verification_request.partial",
+          "verification_request.expired",
+          "verification.completed"
+        ],
+        "description": "Type of webhook event",
+        "example": "verification_request.completed"
+      },
+      "WebhookDeliveryStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "delivered",
+          "failed"
+        ],
+        "description": "Delivery status",
+        "example": "delivered"
+      },
+      "WebhookDelivery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "verification_request_id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/WebhookEventType"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://yourapp.com/webhook"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WebhookDeliveryStatus"
+          },
+          "attempts": {
+            "type": "integer",
+            "example": 1
+          },
+          "max_attempts": {
+            "type": "integer",
+            "example": 3
+          },
+          "last_attempt_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "next_retry_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response_status": {
+            "type": "integer",
+            "example": 200
+          },
+          "response_body": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "event_type",
+          "url",
+          "status",
+          "attempts",
+          "max_attempts",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "Webhook delivery record"
+      },
+      "WebhookDeliveryStats": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 150
+          },
+          "delivered": {
+            "type": "integer",
+            "example": 142
+          },
+          "failed": {
+            "type": "integer",
+            "example": 5
+          },
+          "pending": {
+            "type": "integer",
+            "example": 3
+          },
+          "success_rate": {
+            "type": "number",
+            "example": 94.67
+          }
+        },
+        "required": [
+          "total",
+          "delivered",
+          "failed",
+          "pending",
+          "success_rate"
+        ],
+        "description": "Webhook delivery statistics"
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "degraded",
+              "unhealthy"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "services": {
+            "type": "object",
+            "properties": {
+              "database": {
+                "type": "string",
+                "enum": [
+                  "up",
+                  "down"
+                ]
+              },
+              "redis": {
+                "type": "string",
+                "enum": [
+                  "up",
+                  "down"
+                ]
+              }
+            },
+            "required": [
+              "database",
+              "redis"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "timestamp"
+        ],
+        "description": "Health check response"
+      },
+      "JWK": {
+        "type": "object",
+        "properties": {
+          "kty": {
+            "type": "string",
+            "example": "RSA"
+          },
+          "n": {
+            "type": "string",
+            "description": "RSA modulus"
+          },
+          "e": {
+            "type": "string",
+            "example": "AQAB"
+          },
+          "use": {
+            "type": "string",
+            "enum": [
+              "sig"
+            ]
+          },
+          "alg": {
+            "type": "string",
+            "enum": [
+              "RS256"
+            ]
+          },
+          "kid": {
+            "type": "string",
+            "description": "Key ID"
+          }
+        },
+        "required": [
+          "kty",
+          "n",
+          "e",
+          "use",
+          "alg",
+          "kid"
+        ],
+        "description": "JSON Web Key"
+      },
+      "JWKS": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JWK"
+            }
+          }
+        },
+        "required": [
+          "keys"
+        ],
+        "description": "JSON Web Key Set for offline proof verification"
+      },
+      "VerificationListQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "default": 1,
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 100,
+            "default": 20,
+            "example": 20
+          },
+          "status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          },
+          "type": {
+            "$ref": "#/components/schemas/VerificationType"
+          }
+        }
+      },
+      "IdParam": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "RevokeProofResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-15T12:00:00Z"
+          }
+        },
+        "required": [
+          "success",
+          "revoked_at"
+        ]
+      },
+      "VerificationRequestListQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "default": 1,
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 100,
+            "default": 20,
+            "example": 20
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "partial",
+              "completed",
+              "expired",
+              "cancelled"
+            ]
+          },
+          "reference_id": {
+            "type": "string",
+            "maxLength": 255,
+            "example": "order_12345"
+          }
+        }
+      },
+      "VerificationRequestListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VerificationRequest"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "hasMore": {
+                "type": "boolean"
+              },
+              "nextCursor": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "hasMore"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "CancelRequestResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "cancelled"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "status"
+        ]
+      },
+      "APIInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "proof.holdings API"
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0.0"
+          },
+          "description": {
+            "type": "string",
+            "example": "Proof of Control as a Service"
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "description"
+        ]
+      },
+      "WebhookDeliveryListQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "default": 1,
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 100,
+            "default": 20,
+            "example": 20
+          },
+          "status": {
+            "$ref": "#/components/schemas/WebhookDeliveryStatus"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/WebhookEventType"
+          },
+          "verification_request_id": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ObjectId"
+              },
+              {
+                "description": "Filter by verification request"
+              }
+            ]
+          }
+        }
+      },
+      "WebhookDeliveryListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookDelivery"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "hasMore": {
+                "type": "boolean"
+              },
+              "nextCursor": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "hasMore"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "RetryDeliveryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "delivery": {
+            "$ref": "#/components/schemas/WebhookDelivery"
+          }
+        },
+        "required": [
+          "success",
+          "delivery"
+        ]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/api/v1/verifications": {
+      "post": {
+        "tags": [
+          "Verifications"
+        ],
+        "summary": "Create verification",
+        "description": "Start a new verification challenge for an asset.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVerificationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Verification created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Verification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Verifications"
+        ],
+        "summary": "List verifications",
+        "description": "Get paginated list of verifications for the tenant.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "default": 1,
+              "example": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "maximum": 100,
+              "default": 20,
+              "example": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/VerificationStatus"
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/VerificationType"
+            },
+            "required": false,
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of verifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verifications/{id}": {
+      "get": {
+        "tags": [
+          "Verifications"
+        ],
+        "summary": "Get verification",
+        "description": "Get a specific verification by ID.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Verification"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Verification not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verifications/{id}/submit": {
+      "post": {
+        "tags": [
+          "Verifications"
+        ],
+        "summary": "Submit challenge code",
+        "description": "Submit a challenge code to complete verification.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitChallengeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Verification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid code or validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verifications/{id}/verify": {
+      "post": {
+        "tags": [
+          "Verifications"
+        ],
+        "summary": "Trigger DNS/HTTP check",
+        "description": "Trigger a DNS or HTTP verification check for domain verifications.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Verification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Check failed or invalid verification type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/validate": {
+      "post": {
+        "tags": [
+          "Proofs"
+        ],
+        "summary": "Validate proof token",
+        "description": "Validate a JWT proof token. Can also be done offline using JWKS.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateProofRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateProofResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/{id}/revoke": {
+      "post": {
+        "tags": [
+          "Proofs"
+        ],
+        "summary": "Revoke proof",
+        "description": "Revoke a proof token, making it invalid.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeProofRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Proof revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevokeProofResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Proof not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/revoked": {
+      "get": {
+        "tags": [
+          "Proofs"
+        ],
+        "summary": "Get revocation list",
+        "description": "Get signed list of revoked proofs for offline verification.",
+        "responses": {
+          "200": {
+            "description": "Revocation list",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Caching directive (typically 5 minutes)"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevocationList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification-requests": {
+      "post": {
+        "tags": [
+          "Verification Requests"
+        ],
+        "summary": "Create verification request",
+        "description": "Create a multi-asset verification request.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVerificationRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Verification request created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Verification Requests"
+        ],
+        "summary": "List verification requests",
+        "description": "Get paginated list of verification requests.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "default": 1,
+              "example": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "maximum": 100,
+              "default": 20,
+              "example": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "partial",
+                "completed",
+                "expired",
+                "cancelled"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 255,
+              "example": "order_12345"
+            },
+            "required": false,
+            "name": "reference_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of verification requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationRequestListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification-requests/{id}": {
+      "get": {
+        "tags": [
+          "Verification Requests"
+        ],
+        "summary": "Get verification request",
+        "description": "Get a specific verification request by ID.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification request details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Verification Requests"
+        ],
+        "summary": "Cancel verification request",
+        "description": "Cancel a pending verification request.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request cancelled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelRequestResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions": {
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Create phone session",
+        "description": "Create a phone verification session (phone-first flow).",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sessions/{id}": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Get session status",
+        "description": "Poll for session status (use for long-polling).",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Public"
+        ],
+        "summary": "Health check",
+        "description": "Check API health status.",
+        "responses": {
+          "200": {
+            "description": "API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "API is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/jwks.json": {
+      "get": {
+        "tags": [
+          "Public"
+        ],
+        "summary": "Get JWKS",
+        "description": "Get JSON Web Key Set for offline proof verification.",
+        "responses": {
+          "200": {
+            "description": "JWKS for RS256 verification",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Caching directive (24 hours)"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JWKS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1": {
+      "get": {
+        "tags": [
+          "Public"
+        ],
+        "summary": "API info",
+        "description": "Get API information.",
+        "responses": {
+          "200": {
+            "description": "API info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhook-deliveries/stats": {
+      "get": {
+        "tags": [
+          "Webhook Deliveries"
+        ],
+        "summary": "Get delivery statistics",
+        "description": "Get webhook delivery statistics for your account.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook delivery statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDeliveryStats"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhook-deliveries": {
+      "get": {
+        "tags": [
+          "Webhook Deliveries"
+        ],
+        "summary": "List webhook deliveries",
+        "description": "Get paginated list of webhook deliveries with filtering.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "default": 1,
+              "example": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "maximum": 100,
+              "default": 20,
+              "example": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/WebhookDeliveryStatus"
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/WebhookEventType"
+            },
+            "required": false,
+            "name": "event_type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ObjectId"
+                },
+                {
+                  "description": "Filter by verification request"
+                }
+              ]
+            },
+            "required": false,
+            "name": "verification_request_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of webhook deliveries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDeliveryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhook-deliveries/{id}": {
+      "get": {
+        "tags": [
+          "Webhook Deliveries"
+        ],
+        "summary": "Get webhook delivery",
+        "description": "Get details of a specific webhook delivery including payload and response.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook delivery details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDelivery"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Delivery not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhook-deliveries/{id}/retry": {
+      "post": {
+        "tags": [
+          "Webhook Deliveries"
+        ],
+        "summary": "Retry failed delivery",
+        "description": "Retry a failed webhook delivery. Only available for deliveries with status \"failed\".",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delivery retry initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetryDeliveryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cannot retry (not failed or max retries reached)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Delivery not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
