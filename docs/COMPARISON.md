@@ -37,7 +37,7 @@ Server sends SMS → User receives code → User enters code → Verified
 - Server-initiated (can be phished)
 - No offline verification
 
-**When to use:** Legacy systems requiring SMS
+**When to use:** Legacy systems requiring outbound SMS
 
 ---
 
@@ -132,28 +132,41 @@ Challenge message → Wallet signs → Signature verified → Verified
 
 ### proof.holdings (Reverse OTP)
 
-**How it works:**
+**How it works (phone):**
 ```
-Server shows code → User sends message TO server → Verified → Signed proof
+Server shows code → User sends code via WhatsApp/Telegram/SMS → Verified → Signed proof
 ```
+
+**How it works (email):**
+```
+Server creates challenge → User receives OTP + magic link → User clicks or enters code → Signed proof
+```
+
+**How it works (domain — 4 methods):**
+```
+Auto-DNS:  Server detects DNS provider → User authorizes via OAuth → Record created automatically → Signed proof
+DNS:       Server creates challenge → User adds TXT record manually → Server verifies → Signed proof
+HTTP:      Server creates challenge → User uploads file to /.well-known/ → Server verifies → Signed proof
+Email:     Server creates challenge → Sent to admin@domain → User confirms → Signed proof
+```
+Auto-DNS supports 53 DNS providers for automatic record creation.
 
 **Pros:**
 - User-initiated (secure by design)
-- Low cost (Telegram/WhatsApp inbound is free; SMS has carrier costs)
+- Low cost (WhatsApp/Telegram inbound is free; SMS has carrier costs)
 - Offline-verifiable proofs (RS256)
 - Multi-asset (phone, email, domain, social, wallet)
 - Portable proofs (reuse across systems)
 - No phone number collection upfront
-
-**Cons:**
-- Requires messaging app (Telegram/WhatsApp/Viber) or SMS capability
-- New pattern (education needed)
+- Domain verification supports Auto-DNS with 53 providers
 
 **When to use:**
 - Passwordless authentication
-- Asset verification without identity
+- Asset verification without identity (phone, email, domain)
 - Multi-factor with control proof
 - Cross-system verification
+- Domain ownership verification for SaaS onboarding
+- Design your own verification flows — full API freedom, no rigid templates
 
 ---
 
@@ -210,7 +223,7 @@ Server shows code → User sends message TO server → Verified → Signed proof
 ## When to Use What
 
 ### Use SMS OTP when:
-- Regulatory requirement for SMS
+- You need to send outbound SMS
 - Users don't have smartphones
 - Legacy system integration
 
@@ -228,9 +241,11 @@ Server shows code → User sends message TO server → Verified → Signed proof
 - Need proof of asset control (not just auth)
 - Cost matters at scale
 - Offline verification needed
-- Multi-asset verification
+- Multi-asset verification (phone, email, domain)
 - Proofs need to be portable
 - Don't want to collect phone numbers upfront
+- You want full freedom to design your own verification flows
+- Easy, secure setup without rigid templates or vendor lock-in
 
 ---
 
@@ -273,12 +288,12 @@ const verification = await fetch('https://api.proof.holdings/api/v1/verification
   headers: { 'Authorization': 'Bearer pk_live_...' },
   body: JSON.stringify({
     type: 'phone',
-    channel: 'telegram', // or 'whatsapp', 'sms'
+    channel: 'whatsapp', // or 'telegram', 'sms'
     identifier: userPhone
   })
 });
 
-// Show user: "Send {code} to @proof_holdings_bot"
+// Show user: "Send {code} via WhatsApp"
 // Wait for webhook or poll for completion
 // Receive signed proof token
 ```
@@ -287,14 +302,62 @@ const verification = await fetch('https://api.proof.holdings/api/v1/verification
 
 ---
 
+### Email Verification
+
+```javascript
+const verification = await fetch('https://api.proof.holdings/api/v1/verifications', {
+  method: 'POST',
+  headers: { 'Authorization': 'Bearer pk_live_...' },
+  body: JSON.stringify({
+    type: 'email',
+    channel: 'email',
+    identifier: userEmail
+  })
+});
+
+// User receives OTP + magic link
+// Wait for webhook or poll for completion
+// Receive signed proof token (offline-verifiable)
+```
+
+**Result:** Portable, signed proof of email control — not just a one-time confirmation.
+
+---
+
+### Domain Verification
+
+```javascript
+const verification = await fetch('https://api.proof.holdings/api/v1/verifications', {
+  method: 'POST',
+  headers: { 'Authorization': 'Bearer pk_live_...' },
+  body: JSON.stringify({
+    type: 'domain',
+    channel: 'auto',       // auto-detect DNS provider (53 supported)
+    identifier: 'example.com'
+  })
+});
+
+// channel options: 'auto' (auto-DNS), 'dns' (manual TXT), 'http' (file upload), 'email' (admin email)
+// Auto-DNS: user authorizes via DNS provider OAuth → record created automatically
+// Wait for webhook or poll for completion
+// Receive signed proof token
+```
+
+**Result:** Auto-DNS handles record creation for 53 providers. Four verification methods to fit any workflow.
+
+---
+
 ## Summary
 
 | If you need... | Use... |
 |----------------|--------|
 | Cost-effective phone verification | proof.holdings |
+| Email verification with portable proof | proof.holdings |
+| Domain ownership verification | proof.holdings |
 | Offline-verifiable proofs | proof.holdings |
 | Multi-asset verification | proof.holdings |
-| Legacy SMS compliance | Twilio/SMS |
+| Easy and secure setup | proof.holdings |
+| Legacy outbound SMS | Twilio/SMS |
 | 2FA add-on | TOTP |
 | Strongest device auth | WebAuthn |
 

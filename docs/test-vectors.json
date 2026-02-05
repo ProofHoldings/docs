@@ -4,20 +4,19 @@
   "description": "Golden test cases for SDK authors to validate their implementations",
   "version": "1.0.0",
   "generated": "2026-02-04",
-
   "normalization_vectors": [
     {
-      "description": "US phone number with country code",
+      "description": "Lithuanian phone number with country code",
       "type": "phone",
-      "input": "+1 (555) 123-4567",
-      "expected_normalized": "+15551234567"
+      "input": "+370 691 99199",
+      "expected_normalized": "+37069199199"
     },
     {
-      "description": "US phone number without country code",
+      "description": "Lithuanian phone number with spaces",
       "type": "phone",
-      "input": "555-123-4567",
-      "expected_normalized": "+15551234567",
-      "note": "Assumes US default region"
+      "input": "+370-691-99-199",
+      "expected_normalized": "+37069199199",
+      "note": "Normalized to E.164 format"
     },
     {
       "description": "UK phone number",
@@ -73,12 +72,11 @@
       "note": "Solana addresses are case-sensitive (base58)"
     }
   ],
-
   "identifier_hash_vectors": [
     {
       "description": "Phone number hash",
-      "normalized_identifier": "+15551234567",
-      "expected_hash": "8a59780bb8cd2ba022bfa5ba2ea3b6e07af17a7d8b30c1f9b3390e36f69019e4",
+      "normalized_identifier": "+37069199199",
+      "expected_hash": "1a84d7ea4cfcfa4a7fde9c221c967e6f1cfa22fd5b68e4cbac0912ceb8b602f9",
       "algorithm": "sha256",
       "note": "Hash is hex-encoded, used in proof token identifier_hash claim"
     },
@@ -95,7 +93,6 @@
       "algorithm": "sha256"
     }
   ],
-
   "challenge_format": {
     "description": "Challenge code format specification",
     "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -105,7 +102,6 @@
     "entropy_bits": 31.0,
     "note": "Generated using crypto.randomBytes() with modulo bias reduction"
   },
-
   "proof_token_vectors": [
     {
       "description": "Valid phone verification proof token claims",
@@ -114,7 +110,7 @@
         "user_id": "507f1f77bcf86cd799439012",
         "type": "phone",
         "channel": "telegram",
-        "normalized_identifier": "+15551234567",
+        "normalized_identifier": "+37069199199",
         "verified_at": "2026-02-04T10:00:00.000Z",
         "expires_in_seconds": 2592000
       },
@@ -125,7 +121,7 @@
         "user_id": "507f1f77bcf86cd799439012",
         "type": "phone",
         "channel": "telegram",
-        "identifier_hash": "8a59780bb8cd2ba022bfa5ba2ea3b6e07af17a7d8b30c1f9b3390e36f69019e4",
+        "identifier_hash": "1a84d7ea4cfcfa4a7fde9c221c967e6f1cfa22fd5b68e4cbac0912ceb8b602f9",
         "verified_at": "2026-02-04T10:00:00.000Z"
       },
       "expected_header": {
@@ -184,45 +180,66 @@
       }
     }
   ],
-
   "verification_types": [
     {
       "type": "phone",
-      "valid_channels": ["whatsapp", "telegram", "viber", "sms"],
+      "valid_channels": [
+        "whatsapp",
+        "telegram",
+        "viber",
+        "sms"
+      ],
       "identifier_format": "E.164 phone number",
-      "identifier_example": "+15551234567",
+      "identifier_example": "+37069199199",
       "ttl_seconds": 600
     },
     {
       "type": "email",
-      "valid_channels": ["email"],
+      "valid_channels": [
+        "email"
+      ],
       "identifier_format": "RFC 5321 email address",
       "identifier_example": "user@example.com",
       "ttl_seconds": 1800
     },
     {
       "type": "domain",
-      "valid_channels": ["dns", "http", "email", "auto"],
+      "valid_channels": [
+        "dns",
+        "http"
+      ],
       "identifier_format": "Domain name without protocol",
       "identifier_example": "example.com",
       "ttl_seconds": 86400
     },
     {
       "type": "social",
-      "valid_channels": ["github", "google", "facebook", "twitter", "linkedin", "instagram", "youtube", "tiktok"],
+      "valid_channels": [
+        "github",
+        "google",
+        "facebook",
+        "twitter",
+        "linkedin",
+        "instagram",
+        "youtube",
+        "tiktok"
+      ],
       "identifier_format": "Platform-specific username or ID",
       "identifier_example": "octocat",
       "ttl_seconds": 600
     },
     {
       "type": "wallet",
-      "valid_channels": ["ethereum", "solana", "bitcoin"],
+      "valid_channels": [
+        "ethereum",
+        "solana",
+        "bitcoin"
+      ],
       "identifier_format": "Blockchain address",
       "identifier_example": "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
       "ttl_seconds": 600
     }
   ],
-
   "api_response_vectors": [
     {
       "description": "Create verification - success response",
@@ -230,24 +247,21 @@
       "request": {
         "type": "phone",
         "channel": "telegram",
-        "identifier": "+15551234567"
+        "identifier": "+37069199199"
       },
       "expected_response": {
         "id": "507f1f77bcf86cd799439011",
         "type": "phone",
         "channel": "telegram",
-        "status": "pending",
-        "identifier": "+15551234567",
         "challenge": {
           "code": "X7K2M9",
           "expires_at": "2026-02-04T10:10:00.000Z",
-          "send_to": "@proof_holdings_bot",
-          "instruction": "Open Telegram and tap the button to share your phone number",
-          "deep_link": "https://t.me/proof_holdings_bot?start=507f1f77bcf86cd799439011"
-        },
-        "created_at": "2026-02-04T10:00:00.000Z"
+          "instruction": "X7K2M9",
+          "deep_link": "https://t.me/proof_holdings_bot?start=X7K2M9",
+          "send_to": "@proof_holdings_bot"
+        }
       },
-      "note": "challenge object only returned on creation, not on subsequent GETs. deep_link uses verification ID for Telegram."
+      "note": "challenge.code only returned on creation, not on subsequent GETs"
     },
     {
       "description": "Get verification - pending status",
@@ -257,13 +271,13 @@
         "status": "pending",
         "type": "phone",
         "channel": "telegram",
-        "identifier": "+15551234567",
+        "identifier": "+37069199199",
         "attempts": 0,
         "max_attempts": 3,
-        "challenge_expires_at": "2026-02-04T10:10:00.000Z",
-        "created_at": "2026-02-04T10:00:00.000Z"
+        "created_at": "2026-02-04T10:00:00.000Z",
+        "challenge_expires_at": "2026-02-04T10:10:00.000Z"
       },
-      "note": "challenge_code NOT included in GET response"
+      "note": "challenge.code NOT included in GET response"
     },
     {
       "description": "Get verification - verified status",
@@ -273,7 +287,7 @@
         "status": "verified",
         "type": "phone",
         "channel": "telegram",
-        "identifier": "+15551234567",
+        "identifier": "+37069199199",
         "verified_at": "2026-02-04T10:05:00.000Z",
         "proof_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InByb29mLWhvbGRpbmdzLTIwMjYtMDEifQ...",
         "proof_expires_at": "2026-03-06T10:05:00.000Z",
@@ -370,7 +384,6 @@
       "note": "signature is a JWT containing the revoked array, signed with RS256 for offline validation"
     }
   ],
-
   "error_response_vectors": [
     {
       "description": "Validation error",
@@ -441,7 +454,6 @@
       }
     }
   ],
-
   "jwks_vector": {
     "description": "JWKS endpoint response format",
     "endpoint": "GET /.well-known/jwks.json",
@@ -464,7 +476,6 @@
       "Cache-Control: public, max-age=86400"
     ]
   },
-
   "webhook_signature_vector": {
     "description": "Webhook signature validation",
     "timestamp": "1707048000",
