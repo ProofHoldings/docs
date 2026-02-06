@@ -61,12 +61,12 @@ Create a new verification challenge.
 
 | Type | Valid Channels |
 |------|----------------|
-| `phone` | `telegram`, `whatsapp`, `viber`, `sms` |
+| `phone` | `whatsapp`, `telegram`, `viber`, `sms` |
 | `email` | `email` |
 | `domain` | `dns`, `http`, `email`, `auto` |
-| `social` | `github`, `google`, `x`, etc. (coming soon) |
-| `wallet` | `ethereum`, `solana`, `bitcoin` (coming soon) |
-
+| `social` | `github`, `google`, `facebook`, `x`, `linkedin`, `instagram`, `youtube`, `tiktok` |
+| `wallet` | `ethereum`, `solana`, `bitcoin` |
+| `account` | `coinbase`, `kraken` |
 ### Example Request
 
 ```bash

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-02-06T00:00:00Z",
+  "generatedAt": "2026-02-06T13:36:30.992Z",
   "documents": [
     {
       "slug": "primitives",
       "file": "docs/PRIMITIVES.md",
       "title": "Core Primitives",
       "description": "The mental model in one page",
-      "lastUpdated": "2026-02-05",
+      "lastUpdated": "2026-02-06",
       "status": "current",
       "order": 1
     },
@@ -16,7 +16,7 @@
       "file": "docs/API.md",
       "title": "API Reference",
       "description": "Complete API documentation",
-      "lastUpdated": "2026-02-05",
+      "lastUpdated": "2026-02-06",
       "status": "current",
       "order": 2
     },

@@ -116,12 +116,12 @@ POST /api/v1/proofs/{id}/revoke
 
 | Type | Channels | Example |
 |------|----------|---------|
-| `phone` | whatsapp, telegram, sms, viber | +37069199199 |
+| `phone` | whatsapp, telegram, viber, sms | +37069199199 |
 | `email` | email | user@example.com |
 | `domain` | dns, http, email, auto | example.com |
-| `social` | github, google, x, ... | @username |
+| `social` | github, google, facebook, x, linkedin, instagram, youtube, tiktok | @username |
 | `wallet` | ethereum, solana, bitcoin | 0xAb5801... |
-
+| `account` | coinbase, kraken | user@exchange |
 ---
 
 ## The Innovation: Reverse OTP
