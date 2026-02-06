@@ -30,7 +30,7 @@ const proof = new ProofHoldings('pk_live_your_key');
 const verification = await proof.verifications.create({
   type: 'phone',
   channel: 'whatsapp',
-  identifier: '+1234567890',
+  identifier: '+37069199199',
 });
 
 console.log(verification.challenge.deep_link);
@@ -54,7 +54,7 @@ async def main():
         verification = await proof.verifications.create(
             type="phone",
             channel="telegram",
-            identifier="+1234567890",
+            identifier="+37069199199",
         )
 
         print(verification["challenge"]["deep_link"])
@@ -77,7 +77,7 @@ $proof = new ProofHoldings('pk_live_your_key');
 $verification = $proof->verifications->create([
     'type' => 'phone',
     'channel' => 'sms',
-    'identifier' => '+1234567890',
+    'identifier' => '+37069199199',
 ]);
 
 echo $verification['challenge']['code'];
@@ -105,7 +105,7 @@ func main() {
     verification, _ := client.Verifications.Create(context.Background(), map[string]any{
         "type":       "phone",
         "channel":    "whatsapp",
-        "identifier": "+1234567890",
+        "identifier": "+37069199199",
     })
 
     fmt.Println(verification["challenge"].(map[string]any)["deep_link"])
