@@ -164,7 +164,7 @@ Auto-DNS supports 55 DNS providers for automatic record creation.
 - Multi-asset (phone, email, domain, social, wallet)
 - Portable proofs (reuse across systems)
 - No phone number collection upfront
-- Domain verification supports Auto-DNS with 53 providers
+- Domain verification supports Auto-DNS with 55 providers
 
 **When to use:**
 - Passwordless authentication
@@ -338,7 +338,7 @@ const verification = await fetch('https://api.proof.holdings/api/v1/verification
   headers: { 'Authorization': 'Bearer pk_live_...' },
   body: JSON.stringify({
     type: 'domain',
-    channel: 'auto',       // auto-detect DNS provider (53 supported)
+    channel: 'auto',       // auto-detect DNS provider (55 supported)
     identifier: 'example.com'
   })
 });
@@ -349,7 +349,7 @@ const verification = await fetch('https://api.proof.holdings/api/v1/verification
 // Receive signed proof token
 ```
 
-**Result:** Auto-DNS handles record creation for 53 providers. Four verification methods to fit any workflow.
+**Result:** Auto-DNS handles record creation for 55 providers. Four verification methods to fit any workflow.
 
 ---
 
