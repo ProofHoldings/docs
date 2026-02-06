@@ -68,8 +68,8 @@ curl https://api.proof.holdings/.well-known/jwks.json
 |------|----------|--------|
 | **Phone** | WhatsApp, Telegram, Viber, SMS | ✅ Live |
 | **Email** | OTP + Magic Link | ✅ Live |
-| **Domain** | DNS, HTTP, Email, Auto-DNS (53 providers) | ✅ Live |
-| **Social** | GitHub, Google, Twitter, etc. | Coming Soon |
+| **Domain** | DNS, HTTP, Email, Auto-DNS (55 providers) | ✅ Live |
+| **Social** | GitHub, Google, X, etc. | Coming Soon |
 | **Wallet** | Ethereum, Solana, Bitcoin | Coming Soon |
 
 ---
