@@ -1,3 +1,9 @@
+---
+title: Security
+lastUpdated: "2026-02-05"
+status: current
+---
+
 # proof.holdings Threat Model
 
 > Security analysis for developers integrating proof.holdings

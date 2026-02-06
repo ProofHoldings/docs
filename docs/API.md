@@ -1,3 +1,9 @@
+---
+title: API Reference
+lastUpdated: "2026-02-05"
+status: current
+---
+
 # API Reference
 
 Base URL: `https://api.proof.holdings`

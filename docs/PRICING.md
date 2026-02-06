@@ -1,3 +1,9 @@
+---
+title: Pricing
+lastUpdated: "2026-02-05"
+status: current
+---
+
 # proof.holdings Pricing
 
 > Simple, transparent pricing. Pay for proofs, not messages.

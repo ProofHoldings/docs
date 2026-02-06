@@ -1,3 +1,9 @@
+---
+title: Comparison
+lastUpdated: "2026-02-05"
+status: current
+---
+
 # Verification Methods Compared
 
 > How proof.holdings compares to alternatives

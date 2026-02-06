@@ -1,3 +1,9 @@
+---
+title: Core Primitives
+lastUpdated: "2026-02-05"
+status: current
+---
+
 # proof.holdings Primitives
 
 > The complete mental model in one page
