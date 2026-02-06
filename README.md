@@ -103,6 +103,9 @@ curl https://api.proof.holdings/.well-known/jwks.json
 |----------|-------------|
 | [**PRIMITIVES.md**](docs/PRIMITIVES.md) | Core mental model in one page |
 | [**API.md**](docs/API.md) | Complete API reference |
+| [**SMART_REUSE.md**](docs/SMART_REUSE.md) | Skip re-verification with existing proofs |
+| [**PROFILES.md**](docs/PROFILES.md) | Multiple public profiles per account |
+| [**PROJECTS.md**](docs/PROJECTS.md) | Custom branding and message templates |
 | [**THREAT_MODEL.md**](docs/THREAT_MODEL.md) | Security guarantees and non-goals |
 | [**COMPARISON.md**](docs/COMPARISON.md) | vs SMS OTP, TOTP, WebAuthn |
 | [**PRICING.md**](docs/PRICING.md) | Pricing tiers |
