@@ -21,13 +21,22 @@
       "order": 2
     },
     {
+      "slug": "sdks",
+      "file": "docs/SDKS.md",
+      "title": "SDKs",
+      "description": "Official client libraries",
+      "lastUpdated": "2026-02-06",
+      "status": "current",
+      "order": 3
+    },
+    {
       "slug": "comparison",
       "file": "docs/COMPARISON.md",
       "title": "Comparison",
       "description": "vs SMS OTP, TOTP, WebAuthn",
       "lastUpdated": "2026-02-05",
       "status": "current",
-      "order": 3
+      "order": 4
     },
     {
       "slug": "pricing",
@@ -36,7 +45,7 @@
       "description": "Plans and pricing tiers",
       "lastUpdated": "2026-02-05",
       "status": "current",
-      "order": 4
+      "order": 5
     },
     {
       "slug": "threat-model",
@@ -45,7 +54,7 @@
       "description": "Threat model and guarantees",
       "lastUpdated": "2026-02-05",
       "status": "current",
-      "order": 5
+      "order": 6
     }
   ]
 }
