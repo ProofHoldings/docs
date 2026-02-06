@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-02-06T13:36:30.992Z",
+  "generatedAt": "2026-02-06T18:08:00.000Z",
   "documents": [
     {
       "slug": "primitives",
@@ -30,13 +30,40 @@
       "order": 3
     },
     {
+      "slug": "smart-reuse",
+      "file": "docs/SMART_REUSE.md",
+      "title": "Smart Reuse",
+      "description": "Skip re-verification with existing proofs",
+      "lastUpdated": "2026-02-06",
+      "status": "current",
+      "order": 4
+    },
+    {
+      "slug": "profiles",
+      "file": "docs/PROFILES.md",
+      "title": "Multi-Profile System",
+      "description": "Multiple public profiles per account",
+      "lastUpdated": "2026-02-06",
+      "status": "current",
+      "order": 5
+    },
+    {
+      "slug": "projects",
+      "file": "docs/PROJECTS.md",
+      "title": "Projects & Templates",
+      "description": "Custom branding and message templates",
+      "lastUpdated": "2026-02-06",
+      "status": "current",
+      "order": 6
+    },
+    {
       "slug": "comparison",
       "file": "docs/COMPARISON.md",
       "title": "Comparison",
       "description": "vs SMS OTP, TOTP, WebAuthn",
       "lastUpdated": "2026-02-05",
       "status": "current",
-      "order": 4
+      "order": 7
     },
     {
       "slug": "pricing",
@@ -45,7 +72,7 @@
       "description": "Plans and pricing tiers",
       "lastUpdated": "2026-02-05",
       "status": "current",
-      "order": 5
+      "order": 8
     },
     {
       "slug": "threat-model",
@@ -54,7 +81,7 @@
       "description": "Threat model and guarantees",
       "lastUpdated": "2026-02-05",
       "status": "current",
-      "order": 6
+      "order": 9
     }
   ]
 }
