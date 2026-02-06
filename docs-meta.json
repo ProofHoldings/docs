@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-02-06T00:00:00Z",
+  "documents": [
+    {
+      "slug": "primitives",
+      "file": "docs/PRIMITIVES.md",
+      "title": "Core Primitives",
+      "description": "The mental model in one page",
+      "lastUpdated": "2026-02-05",
+      "status": "current",
+      "order": 1
+    },
+    {
+      "slug": "api",
+      "file": "docs/API.md",
+      "title": "API Reference",
+      "description": "Complete API documentation",
+      "lastUpdated": "2026-02-05",
+      "status": "current",
+      "order": 2
+    },
+    {
+      "slug": "comparison",
+      "file": "docs/COMPARISON.md",
+      "title": "Comparison",
+      "description": "vs SMS OTP, TOTP, WebAuthn",
+      "lastUpdated": "2026-02-05",
+      "status": "current",
+      "order": 3
+    },
+    {
+      "slug": "pricing",
+      "file": "docs/PRICING.md",
+      "title": "Pricing",
+      "description": "Plans and pricing tiers",
+      "lastUpdated": "2026-02-05",
+      "status": "current",
+      "order": 4
+    },
+    {
+      "slug": "threat-model",
+      "file": "docs/THREAT_MODEL.md",
+      "title": "Security",
+      "description": "Threat model and guarantees",
+      "lastUpdated": "2026-02-05",
+      "status": "current",
+      "order": 5
+    }
+  ]
+}
