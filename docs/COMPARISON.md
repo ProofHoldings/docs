@@ -149,7 +149,7 @@ DNS:       Server creates challenge → User adds TXT record manually → Server
 HTTP:      Server creates challenge → User uploads file to /.well-known/ → Server verifies → Signed proof
 Email:     Server creates challenge → Sent to admin@domain → User confirms → Signed proof
 ```
-Auto-DNS supports 53 DNS providers for automatic record creation.
+Auto-DNS supports 55 DNS providers for automatic record creation.
 
 **Pros:**
 - User-initiated (secure by design)
