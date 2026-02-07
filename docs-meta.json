@@ -48,11 +48,11 @@
       "order": 5
     },
     {
-      "slug": "projects",
-      "file": "docs/PROJECTS.md",
-      "title": "Projects & Templates",
-      "description": "Custom branding and message templates",
-      "lastUpdated": "2026-02-06",
+      "slug": "templates",
+      "file": "docs/TEMPLATES.md",
+      "title": "Message Templates",
+      "description": "Custom branding and message templates per project",
+      "lastUpdated": "2026-02-07",
       "status": "current",
       "order": 6
     },

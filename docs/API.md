@@ -443,4 +443,4 @@ All errors return:
 |---------|-----------|---------------|
 | **Smart Reuse** | `GET /api/v1/verify/request/:id/proofs`, `POST .../auto-verify` | [Smart Reuse](/docs/smart-reuse) |
 | **Multi-Profile** | `GET/POST /api/v1/me/profiles`, `PATCH/DELETE .../profiles/:id` | [Multi-Profile System](/docs/profiles) |
-| **Projects & Templates** | `GET/POST /api/v1/me/projects`, `PUT .../templates/:channel/:type` | [Projects & Templates](/docs/projects) |
+| **Message Templates** | `GET/POST /api/v1/me/projects`, `PUT .../templates/:channel/:type` | [Message Templates](/docs/templates) |

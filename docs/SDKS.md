@@ -10,9 +10,9 @@ Install an official SDK to start verifying assets in minutes. All SDKs provide t
 
 | Language | Package | Install |
 |----------|---------|---------|
-| JavaScript/TypeScript | `@proof-holdings/sdk` | `npm install @proof-holdings/sdk` |
+| JavaScript/TypeScript | `@proof/sdk` | `npm install @proof/sdk` |
 | Python | `proof-sdk` | `pip install proof-sdk` |
-| PHP | `proof-holdings/sdk` | `composer require proof-holdings/sdk` |
+| PHP | `proof/sdk` | `composer require proof/sdk` |
 | Go | `github.com/ProofHoldings/sdk-go` | `go get github.com/ProofHoldings/sdk-go` |
 
 ---
@@ -22,9 +22,9 @@ Install an official SDK to start verifying assets in minutes. All SDKs provide t
 ### JavaScript / TypeScript
 
 ```typescript
-import { ProofHoldings } from '@proof-holdings/sdk';
+import { Proof } from '@proof/sdk';
 
-const proof = new ProofHoldings('pk_live_your_key');
+const proof = new Proof('pk_live_your_key');
 
 // Create a phone verification
 const verification = await proof.verifications.create({
@@ -46,10 +46,10 @@ console.log(result.proof.token);
 
 ```python
 import asyncio
-from proof_sdk import ProofHoldings
+from proof_sdk import Proof
 
 async def main():
-    async with ProofHoldings("pk_live_your_key") as proof:
+    async with Proof("pk_live_your_key") as proof:
         # Create a phone verification
         verification = await proof.verifications.create(
             type="phone",
@@ -69,9 +69,9 @@ asyncio.run(main())
 ### PHP
 
 ```php
-use ProofHoldings\ProofHoldings;
+use Proof\Proof;
 
-$proof = new ProofHoldings('pk_live_your_key');
+$proof = new Proof('pk_live_your_key');
 
 // Create a phone verification
 $verification = $proof->verifications->create([
@@ -281,7 +281,7 @@ All SDKs throw typed errors that map to HTTP status codes. Every error includes 
 ### JavaScript
 
 ```typescript
-import { ValidationError, NotFoundError } from '@proof-holdings/sdk';
+import { ValidationError, NotFoundError } from '@proof/sdk';
 
 try {
   await proof.verifications.retrieve('invalid_id');
@@ -310,8 +310,8 @@ except ValidationError as e:
 ### PHP
 
 ```php
-use ProofHoldings\Exceptions\NotFoundException;
-use ProofHoldings\Exceptions\ValidationException;
+use Proof\Exceptions\NotFoundException;
+use Proof\Exceptions\ValidationException;
 
 try {
     $proof->verifications->retrieve('invalid_id');
@@ -359,7 +359,7 @@ Rate limit responses with a `Retry-After` header are respected automatically.
 **JavaScript:**
 
 ```typescript
-const proof = new ProofHoldings('pk_live_...', {
+const proof = new Proof('pk_live_...', {
   maxRetries: 5,
   timeout: 60000,
 });
@@ -368,7 +368,7 @@ const proof = new ProofHoldings('pk_live_...', {
 **Python:**
 
 ```python
-proof = ProofHoldings(
+proof = Proof(
     "pk_live_...",
     max_retries=5,
     timeout=60.0,
@@ -378,7 +378,7 @@ proof = ProofHoldings(
 **PHP:**
 
 ```php
-$proof = new ProofHoldings(
+$proof = new Proof(
     'pk_live_...',
     maxRetries: 5,
     timeout: 60.0,
