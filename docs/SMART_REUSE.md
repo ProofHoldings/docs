@@ -180,9 +180,9 @@ If no `validity_requirement` is set, any non-expired proof can be reused.
 ## Integration Example
 
 ```typescript
-import { ProofHoldings } from '@proof-holdings/sdk';
+import { Proof } from '@proof/sdk';
 
-const proof = new ProofHoldings('pk_live_your_key');
+const proof = new Proof('pk_live_your_key');
 
 // 1. Create a verification request with validity requirement
 const request = await proof.verificationRequests.create({

@@ -1,10 +1,10 @@
 ---
-title: Projects & Templates
-lastUpdated: "2026-02-06"
+title: Message Templates
+lastUpdated: "2026-02-07"
 status: current
 ---
 
-# Projects & Templates
+# Message Templates
 
 > Custom branding and message templates per project
 
