@@ -111,7 +111,7 @@ It is NOT:
 - Each verification generates unique proof token
 - `iat` (issued at) prevents backdating
 
-**Residual risk:** Valid proof can be replayed within its validity window — this is by design (proofs are meant to be portable).
+**Residual risk:** Valid proof can be replayed within its validity window — this is by design (proofs are meant to be portable). Integrators can control this by setting shorter proof expiry via the `expires_in` parameter when creating verifications, or by requiring fresh proofs (`iat` check) for sensitive actions. See [Expiry Recommendations](#expiry-recommendations) below.
 
 #### 5. Timing Attacks
 **Traditional vulnerability:** Attacker infers information from response timing.
@@ -155,7 +155,7 @@ It is NOT:
 - Cloudflare proxy with origin IP lockdown
 - Webhook signatures (HMAC-SHA256 with timestamp)
 
-**Residual risk:** Cloudflare compromise would be catastrophic (affects most of internet).
+**Residual risk:** Cloudflare compromise would be catastrophic (affects most of internet). **Mitigation:** Origin server locked to Cloudflare IP ranges only (iptables), HSTS preload prevents downgrade, webhook signatures (HMAC-SHA256) provide end-to-end integrity independent of transport, and proof tokens are cryptographically signed (RS256) so tampering is detectable even if TLS is compromised.
 
 #### 9. Denial of Service (Request Flooding)
 **Traditional vulnerability:** Attacker sends oversized payloads to exhaust memory.
@@ -404,7 +404,7 @@ Note: Production warns if webhook secret not configured — receivers cannot ver
 
 ## Related Documentation
 
-- [API Reference](./API.md) — Endpoints, authentication, webhooks
-- [Primitives](./PRIMITIVES.md) — Core mental model
-- [Pricing](./PRICING.md) — Plans and verification limits
-- [Test Vectors](./test-vectors.json) — Golden test cases for SDK authors
+- [API Reference](/docs/api) — Endpoints, authentication, webhooks
+- [Primitives](/docs/primitives) — Core mental model
+- [Pricing](/docs/pricing) — Plans and verification limits
+- [SDKs](/docs/sdks) — Official client libraries
