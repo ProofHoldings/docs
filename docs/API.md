@@ -52,7 +52,7 @@ Create a new verification challenge.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `type` | string | Yes | `phone`, `email`, `domain`, `social`, `wallet` |
+| `type` | string | Yes | `phone`, `email`, `domain`, `social`, `wallet`, `waba`, `telegram_bot` |
 | `channel` | string | Yes | Channel for verification (see table below) |
 | `identifier` | string | Yes | The asset to verify |
 | `client_metadata` | object | No | Custom metadata for your reference |
@@ -67,6 +67,8 @@ Create a new verification challenge.
 | `social` | `github`, `google`, `facebook`, `x`, `linkedin`, `instagram`, `youtube`, `tiktok` |
 | `wallet` | `ethereum`, `solana`, `bitcoin` |
 | `account` | `coinbase`, `kraken` |
+| `waba` | `waba_otp` |
+| `telegram_bot` | `telegram_bot_token` |
 ### Example Request
 
 ```bash
@@ -214,7 +216,7 @@ Each asset in the `assets` array:
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `type` | string | Yes | `phone`, `email`, `domain`, `social`, `wallet` |
+| `type` | string | Yes | `phone`, `email`, `domain`, `social`, `wallet`, `waba`, `telegram_bot` |
 | `identifier` | string | No | Asset to verify (null = user provides) |
 | `channel` | string | No | Preferred channel |
 | `allowed_channels` | array | No | Restrict to specific channels |

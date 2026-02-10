@@ -122,6 +122,8 @@ POST /api/v1/proofs/{id}/revoke
 | `social` | github, google, facebook, x, linkedin, instagram, youtube, tiktok | @username |
 | `wallet` | ethereum, solana, bitcoin | 0xAb5801... |
 | `account` | coinbase, kraken | user@exchange |
+| `waba` | waba_otp | +37069199199 |
+| `telegram_bot` | telegram_bot_token | @mybusinessbot |
 ---
 
 ## The Innovation: Reverse OTP
