@@ -86,7 +86,9 @@
           "domain",
           "social",
           "wallet",
-          "account"
+          "account",
+          "waba",
+          "telegram_bot"
         ],
         "description": "Type of asset being verified",
         "example": "phone"
@@ -114,7 +116,9 @@
           "solana",
           "bitcoin",
           "coinbase",
-          "kraken"
+          "kraken",
+          "waba_otp",
+          "telegram_bot_token"
         ],
         "description": "Channel used for verification",
         "example": "whatsapp"
