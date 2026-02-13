@@ -241,6 +241,48 @@
         ],
         "description": "Field-level validation error detail"
       },
+      "TestVerifyResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "type": {
+            "$ref": "#/components/schemas/VerificationType"
+          },
+          "channel": {
+            "type": "string",
+            "example": "whatsapp"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["verified"]
+          },
+          "identifier": {
+            "type": "string",
+            "example": "+37069199199"
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-02-13T12:25:00Z"
+          },
+          "proof_token": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIs..."
+          },
+          "proof_expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-03-15T12:25:00Z"
+          },
+          "test_mode": {
+            "type": "boolean",
+            "enum": [true]
+          }
+        },
+        "required": ["id", "type", "channel", "status", "identifier", "verified_at", "proof_token", "proof_expires_at", "test_mode"]
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -1726,6 +1768,72 @@
           },
           "400": {
             "description": "Check failed or invalid verification type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verifications/{id}/test-verify": {
+      "post": {
+        "tags": [
+          "Verifications"
+        ],
+        "summary": "Auto-verify (test mode only)",
+        "description": "Instantly complete a verification in test mode. Only works with test API keys (`pk_test_*`). Returns 403 for production keys. Generates a valid proof token without requiring user action.",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification auto-completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestVerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Verification is not in pending status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Test mode required — only available with pk_test_* keys",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Verification not found (must be a test-environment verification)",
             "content": {
               "application/json": {
                 "schema": {

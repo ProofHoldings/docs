@@ -173,6 +173,7 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 **What's NOT counted:**
 - ❌ Failed verification attempts
 - ❌ Expired challenges (not completed)
+- ❌ Test mode verifications (`pk_test_` keys — unlimited, free)
 - ❌ API calls (unlimited)
 - ❌ Webhook deliveries (unlimited)
 - ❌ Proof validations (unlimited, offline)
@@ -224,6 +225,14 @@ BYOC = complete white-label experience. Users never see proof.holdings.
 ### Is there a free trial?
 - PAYG includes 1,000 free proofs/month
 - No credit card required to start
+- Test mode (`pk_test_` keys) is always free with unlimited verifications
+
+### What exactly is test mode?
+- Use `pk_test_` API keys instead of `pk_live_` — all API calls work identically
+- No real messages are sent (SMS, email, WhatsApp, Telegram are all simulated)
+- Use the `test-verify` endpoint to auto-complete verifications instantly
+- Test verifications don't count toward your monthly quota or billing
+- Webhooks still fire (with `"test": true` flag) so you can test your integration end-to-end
 
 ### What's the difference between Business and White-Label?
 - **Business (€79)**: Custom branding in messages, shared infrastructure

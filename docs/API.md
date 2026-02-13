@@ -25,6 +25,7 @@ API keys are prefixed with `pk_live_` for production and `pk_test_` for testing.
 | `POST` | `/api/v1/verifications` | Create verification challenge |
 | `GET` | `/api/v1/verifications/:id` | Get verification status |
 | `POST` | `/api/v1/verifications/:id/verify` | Trigger DNS/HTTP check |
+| `POST` | `/api/v1/verifications/:id/test-verify` | Auto-verify (test mode only) |
 | `GET` | `/api/v1/verifications` | List verifications |
 | `POST` | `/api/v1/proofs/validate` | Validate proof token |
 | `POST` | `/api/v1/proofs/:id/revoke` | Revoke a proof |
@@ -39,6 +40,77 @@ API keys are prefixed with `pk_live_` for production and `pk_test_` for testing.
 | `GET` | `/api/v1/verification-requests/by-reference/:referenceId` | Get by reference ID |
 | `GET` | `/.well-known/jwks.json` | Public keys (RS256) |
 | `GET` | `/health` | Service status |
+
+---
+
+## Test Mode (Sandbox)
+
+Use test mode to build and test your integration without sending real messages, consuming quota, or incurring charges. Test mode is activated automatically when you authenticate with a **test API key** (`pk_test_*`).
+
+### How It Works
+
+| Aspect | Production (`pk_live_*`) | Test Mode (`pk_test_*`) |
+|--------|--------------------------|-------------------------|
+| Channel delivery | Real messages sent | Skipped — no real messages |
+| Quota usage | Counted toward monthly limit | Not counted |
+| Billing | Charged per proof | Free |
+| Webhooks | Delivered normally | Delivered with `"test": true` flag |
+| Data isolation | Only sees production verifications | Only sees test verifications |
+| Proof tokens | Valid, signed JWT | Valid, signed JWT (identical format) |
+
+### Auto-Verify Endpoint
+
+`POST /api/v1/verifications/:id/test-verify`
+
+Instantly complete a verification without user action. Only available with test API keys (`pk_test_*`). Returns `403` for production keys.
+
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "type": "phone",
+  "channel": "whatsapp",
+  "status": "verified",
+  "identifier": "+37069199199",
+  "verified_at": "2026-02-13T12:25:00Z",
+  "proof_token": "eyJhbGciOiJSUzI1NiIs...",
+  "proof_expires_at": "2026-03-15T12:25:00Z",
+  "test_mode": true
+}
+```
+
+### Example: Full Test Flow
+
+```bash
+# 1. Create verification with test key (no real message sent)
+curl -X POST https://api.proof.holdings/api/v1/verifications \
+  -H "Authorization: Bearer pk_test_..." \
+  -H "Content-Type: application/json" \
+  -d '{"type":"phone","channel":"whatsapp","identifier":"+37069199199"}'
+
+# 2. Auto-verify (skip waiting for user action)
+curl -X POST https://api.proof.holdings/api/v1/verifications/{id}/test-verify \
+  -H "Authorization: Bearer pk_test_..."
+
+# 3. Use the proof token exactly as you would in production
+```
+
+### Webhook Behavior
+
+Test mode webhooks are delivered normally but include `"test": true` in the payload:
+
+```json
+{
+  "event": "verification_request.completed",
+  "test": true,
+  "request_id": "req_abc123",
+  "status": "completed",
+  "proofs": [...]
+}
+```
+
+### Environment Isolation
+
+Test and production data are completely isolated. A `pk_test_` key can only see test verifications, and a `pk_live_` key can only see production verifications.
 
 ---
 
@@ -181,7 +253,7 @@ Poll for session status. When verified, includes the phone number and proof toke
   "id": "sess_abc123",
   "channel": "telegram",
   "status": "verified",
-  "phone_number": "+15551234567",
+  "phone_number": "+37069199199",
   "verified_at": "2026-02-04T10:51:30Z",
   "verification_id": "507f1f77bcf86cd799439011",
   "proof": {

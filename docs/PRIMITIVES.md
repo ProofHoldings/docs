@@ -45,6 +45,8 @@ verifyProof(proof)      →  { valid, claims }
 revokeProof(proofId)    →  { success }
 ```
 
+> **Test mode:** All three primitives work identically with `pk_test_` keys. No real messages are sent, and you can auto-complete verifications with `POST /api/v1/verifications/:id/test-verify`. See [API Reference — Test Mode](API.md#test-mode-sandbox).
+
 ### 1. createChallenge
 
 Ask proof.holdings to create a verification challenge.

@@ -50,6 +50,8 @@ curl https://api.proof.holdings/.well-known/jwks.json
 # Then: jwt.verify(proof_token, publicKey, { algorithms: ['RS256'] })
 ```
 
+> **Sandbox:** Use `pk_test_` keys to test without sending real messages or consuming quota. Auto-complete verifications with `POST /api/v1/verifications/{id}/test-verify`. See [Test Mode](docs/API.md#test-mode-sandbox).
+
 ---
 
 ## Three Primitives

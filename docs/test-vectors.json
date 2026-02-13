@@ -476,6 +476,93 @@
       "Cache-Control: public, max-age=86400"
     ]
   },
+  "test_mode_vectors": {
+    "description": "Test mode (sandbox) verification flow vectors",
+    "create_test_verification": {
+      "description": "Create verification with pk_test_ key — no real message sent",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/verifications",
+        "headers": {
+          "Authorization": "Bearer pk_test_example_key",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "type": "phone",
+          "channel": "whatsapp",
+          "identifier": "+37069199199"
+        }
+      },
+      "expected_response": {
+        "status_code": 201,
+        "body_contains": {
+          "status": "pending",
+          "type": "phone",
+          "channel": "whatsapp"
+        }
+      },
+      "notes": [
+        "Verification is created but no real WhatsApp message is sent",
+        "Challenge code is still generated (for API compatibility)",
+        "Verification has environment: 'test' in the database"
+      ]
+    },
+    "test_verify_endpoint": {
+      "description": "Auto-complete a test verification without user action",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/verifications/{id}/test-verify",
+        "headers": {
+          "Authorization": "Bearer pk_test_example_key"
+        }
+      },
+      "expected_response": {
+        "status_code": 200,
+        "body_contains": {
+          "status": "verified",
+          "test_mode": true,
+          "proof_token": "eyJ... (valid signed JWT)"
+        }
+      },
+      "notes": [
+        "Only works with pk_test_ keys — pk_live_ keys get 403",
+        "Only works on test-environment verifications in pending status",
+        "Generates a real, valid proof token (identical format to production)"
+      ]
+    },
+    "test_verify_with_production_key": {
+      "description": "Attempting test-verify with production key returns 403",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/verifications/{id}/test-verify",
+        "headers": {
+          "Authorization": "Bearer pk_live_example_key"
+        }
+      },
+      "expected_response": {
+        "status_code": 403,
+        "body": {
+          "error": {
+            "code": "test_mode_required",
+            "message": "This endpoint is only available with test API keys (pk_test_*)"
+          }
+        }
+      }
+    },
+    "test_mode_webhook_payload": {
+      "description": "Webhook payload from test mode includes test: true flag",
+      "expected_payload_contains": {
+        "event": "verification_request.completed",
+        "test": true,
+        "status": "completed"
+      },
+      "notes": [
+        "Webhooks are delivered normally in test mode",
+        "The 'test' field distinguishes test from production webhooks",
+        "Use this flag to skip side effects in your webhook handler"
+      ]
+    }
+  },
   "webhook_signature_vector": {
     "description": "Webhook signature validation",
     "timestamp": "1707048000",

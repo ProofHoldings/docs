@@ -128,11 +128,44 @@ All SDKs expose the same five resources that map to the REST API:
 
 | Resource | Methods |
 |----------|---------|
-| `verifications` | `create`, `retrieve`, `list`, `verify`, `submit`, `waitForCompletion` |
+| `verifications` | `create`, `retrieve`, `list`, `verify`, `submit`, `testVerify`, `waitForCompletion` |
 | `sessions` | `create`, `retrieve`, `waitForCompletion` |
 | `verificationRequests` | `create`, `retrieve`, `list`, `cancel`, `waitForCompletion` |
 | `proofs` | `validate`, `revoke`, `getRevocationList`, `checkRevocation` |
 | `webhookDeliveries` | `list`, `retrieve`, `retry` |
+
+---
+
+## Test Mode (Sandbox)
+
+Use `pk_test_` keys to test your integration without sending real messages or consuming quota. All SDK methods work identically — the only addition is `testVerify` for auto-completing verifications.
+
+```typescript
+// JavaScript — full test flow
+const proof = new Proof('pk_test_your_key');
+
+const verification = await proof.verifications.create({
+  type: 'phone',
+  channel: 'whatsapp',
+  identifier: '+37069199199',
+});
+
+// Auto-complete without waiting for user action
+const result = await proof.verifications.testVerify(verification.id);
+console.log(result.proof_token); // Valid JWT, same as production
+```
+
+```python
+# Python — full test flow
+async with Proof("pk_test_your_key") as proof:
+    verification = await proof.verifications.create(
+        type="phone", channel="telegram", identifier="+37069199199",
+    )
+    result = await proof.verifications.test_verify(verification["id"])
+    print(result["proof_token"])
+```
+
+> **Note:** Test mode webhooks include `"test": true` in the payload. Proof tokens are valid signed JWTs with identical format to production.
 
 ---
 
