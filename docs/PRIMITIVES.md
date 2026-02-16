@@ -311,8 +311,6 @@ Everything else is implementation detail.
 
 ## Resources
 
-- [API Explorer](https://api.proof.holdings/api/docs) — Interactive Swagger UI
-- [OpenAPI Spec](https://api.proof.holdings/api/openapi.json) — Machine-readable API definition
 - [JWKS Public Keys](https://api.proof.holdings/.well-known/jwks.json) — For offline proof verification
 - [API Status](https://api.proof.holdings/health) — Health check endpoint
 - [GitHub Docs](https://github.com/ProofHoldings/docs) — Source of truth for all documentation
