@@ -256,7 +256,9 @@
           },
           "status": {
             "type": "string",
-            "enum": ["verified"]
+            "enum": [
+              "verified"
+            ]
           },
           "identifier": {
             "type": "string",
@@ -278,10 +280,22 @@
           },
           "test_mode": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           }
         },
-        "required": ["id", "type", "channel", "status", "identifier", "verified_at", "proof_token", "proof_expires_at", "test_mode"]
+        "required": [
+          "id",
+          "type",
+          "channel",
+          "status",
+          "identifier",
+          "verified_at",
+          "proof_token",
+          "proof_expires_at",
+          "test_mode"
+        ]
       },
       "ErrorResponse": {
         "type": "object",

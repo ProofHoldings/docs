@@ -1,6 +1,6 @@
 ---
 title: API Reference
-lastUpdated: "2026-02-05"
+lastUpdated: "2026-02-18"
 status: current
 ---
 
@@ -23,21 +23,32 @@ API keys are prefixed with `pk_live_` for production and `pk_test_` for testing.
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
 | `POST` | `/api/v1/verifications` | Create verification challenge |
-| `GET` | `/api/v1/verifications/:id` | Get verification status |
-| `POST` | `/api/v1/verifications/:id/verify` | Trigger DNS/HTTP check |
-| `POST` | `/api/v1/verifications/:id/test-verify` | Auto-verify (test mode only) |
 | `GET` | `/api/v1/verifications` | List verifications |
+| `GET` | `/api/v1/verifications/:id` | Get verification status |
+| `POST` | `/api/v1/verifications/:id/submit` | Submit challenge code |
+| `POST` | `/api/v1/verifications/:id/verify` | Trigger DNS/HTTP check |
+| `POST` | `/api/v1/verifications/:id/resend` | Resend verification (email only) |
+| `POST` | `/api/v1/verifications/:id/test-verify` | Auto-verify (test mode only) |
+| `GET` | `/api/v1/verifications/:id/events` | Stream status updates (SSE) |
+| `GET` | `/api/v1/verifications/users` | List verified users (B2B) |
+| `GET` | `/api/v1/verifications/users/:externalUserId` | Get verified user details (B2B) |
+| `POST` | `/api/v1/verifications/domain` | Start domain verification (B2B) |
+| `POST` | `/api/v1/verifications/domain/:id/check` | Check domain verification (B2B) |
 | `POST` | `/api/v1/proofs/validate` | Validate proof token |
+| `GET` | `/api/v1/proofs/:id/status` | Check proof status |
 | `POST` | `/api/v1/proofs/:id/revoke` | Revoke a proof |
 | `GET` | `/api/v1/proofs/revoked` | Get revocation list |
-| `GET` | `/api/v1/proofs/:id/status` | Check if proof is revoked |
 | `POST` | `/api/v1/sessions` | Create phone verification session |
 | `GET` | `/api/v1/sessions/:id` | Get session status |
 | `POST` | `/api/v1/verification-requests` | Create multi-asset verification request |
 | `GET` | `/api/v1/verification-requests` | List verification requests |
 | `GET` | `/api/v1/verification-requests/:id` | Get verification request |
-| `DELETE` | `/api/v1/verification-requests/:id` | Cancel verification request |
 | `GET` | `/api/v1/verification-requests/by-reference/:referenceId` | Get by reference ID |
+| `DELETE` | `/api/v1/verification-requests/:id` | Cancel verification request |
+| `GET` | `/api/v1/webhook-deliveries` | List webhook deliveries |
+| `GET` | `/api/v1/webhook-deliveries/:id` | Get webhook delivery details |
+| `GET` | `/api/v1/webhook-deliveries/stats` | Get delivery statistics |
+| `POST` | `/api/v1/webhook-deliveries/:id/retry` | Retry failed delivery |
 | `GET` | `/.well-known/jwks.json` | Public keys (RS256) |
 | `GET` | `/health` | Service status |
 
@@ -199,6 +210,225 @@ Poll for verification status.
     "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
     "expires_at": "2026-03-06T10:51:30Z"
   }
+}
+```
+
+---
+
+## Submit Challenge Code
+
+`POST /api/v1/verifications/:id/submit`
+
+Submit an OTP challenge code for email/phone verification.
+
+### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `challenge_code` | string | Yes | The 6-character challenge code |
+| `source_identifier` | string | No | Phone/email that sent the code (for validation) |
+
+### Response
+
+Returns the updated verification object (same as Get Verification).
+
+---
+
+## Resend Verification
+
+`POST /api/v1/verifications/:id/resend`
+
+Resend the verification challenge. Currently only supported for email verifications. The verification must be in `pending` status.
+
+### Response
+
+```json
+{
+  "success": true,
+  "message": "Verification email sent",
+  "expires_at": "2026-02-13T12:10:00Z"
+}
+```
+
+---
+
+## Verification Events (SSE)
+
+`GET /api/v1/verifications/:id/events`
+
+Subscribe to real-time verification status updates via Server-Sent Events. Use this instead of polling `GET /verifications/:id`.
+
+### Usage
+
+```javascript
+const source = new EventSource(
+  'https://api.proof.holdings/api/v1/verifications/{id}/events',
+  { headers: { 'Authorization': 'Bearer pk_live_...' } }
+);
+
+source.addEventListener('connected', (e) => {
+  console.log('Connected:', JSON.parse(e.data));
+});
+
+source.addEventListener('status_changed', (e) => {
+  const update = JSON.parse(e.data);
+  if (update.status === 'verified') {
+    source.close();
+  }
+});
+```
+
+### Events
+
+| Event | Description |
+|-------|-------------|
+| `connected` | Initial connection established |
+| `status_changed` | Verification status updated |
+
+A 30-second heartbeat keeps the connection alive through Cloudflare. Maximum concurrent SSE connections per tenant is configurable (default: 10).
+
+---
+
+## Verified Users (B2B)
+
+### List Verified Users
+
+`GET /api/v1/verifications/users`
+
+List verified users grouped by `external_user_id`. Only includes verifications where `external_user_id` was set during creation.
+
+Query parameters: `page`, `limit` (max 100)
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "external_user_id": "user_12345",
+      "verification_count": 3,
+      "types_verified": ["phone", "email"],
+      "verifications": [
+        { "id": "507f...", "type": "phone", "channel": "whatsapp", "identifier": "+3706***9199", "verified_at": "2026-02-13T12:00:00Z" }
+      ],
+      "first_verified_at": "2026-01-10T08:00:00Z",
+      "last_verified_at": "2026-02-13T12:00:00Z"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 20, "total": 42, "pages": 3 }
+}
+```
+
+### Get Verified User
+
+`GET /api/v1/verifications/users/:externalUserId`
+
+Get all verifications for a specific external user.
+
+#### Response
+
+```json
+{
+  "external_user_id": "user_12345",
+  "verification_count": 3,
+  "types_verified": ["phone", "email"],
+  "verifications": [
+    {
+      "id": "507f...",
+      "type": "phone",
+      "channel": "whatsapp",
+      "identifier": "+3706***9199",
+      "status": "verified",
+      "verified_at": "2026-02-13T12:00:00Z",
+      "has_proof": true,
+      "proof_expires_at": "2026-03-15T12:00:00Z",
+      "created_at": "2026-02-13T11:50:00Z"
+    }
+  ]
+}
+```
+
+---
+
+## Domain Verification (B2B)
+
+### Start Domain Verification
+
+`POST /api/v1/verifications/domain`
+
+Start a domain verification flow. Returns DNS and HTTP instructions for the domain owner.
+
+### Request Body
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `domain` | string | Yes | Domain to verify (e.g., `example.com`) |
+| `customer_id` | string | No | Optional customer identifier |
+| `verification_method` | string | No | `manual_dns` (default) or `http_file` |
+
+#### Response
+
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "domain": "example.com",
+  "status": "pending",
+  "verification_method": "manual_dns",
+  "dns_record": {
+    "type": "TXT",
+    "name": "_proof.example.com",
+    "value": "proof-verify=abc123"
+  },
+  "http_file": {
+    "path": "/.well-known/proof-verify.txt",
+    "content": "proof-verify=abc123"
+  },
+  "provider": {
+    "detected": "cloudflare",
+    "name": "Cloudflare"
+  }
+}
+```
+
+### Check Domain Verification
+
+`POST /api/v1/verifications/domain/:id/check`
+
+Check if DNS TXT record or HTTP file has been set up correctly.
+
+#### Response
+
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "domain": "example.com",
+  "status": "verified",
+  "verified": true,
+  "verified_at": "2026-02-13T12:00:00Z",
+  "check_count": 1
+}
+```
+
+---
+
+## Proof Status
+
+`GET /api/v1/proofs/:id/status`
+
+Quick status check for a proof without validating the full JWT. Returns whether the proof is valid, revoked, or expired.
+
+### Response
+
+```json
+{
+  "proof_id": "507f1f77bcf86cd799439011",
+  "status": "verified",
+  "is_valid": true,
+  "is_revoked": false,
+  "revoked_at": null,
+  "revoked_reason": null,
+  "expires_at": "2026-03-15T12:00:00Z",
+  "is_expired": false
 }
 ```
 
@@ -462,6 +692,94 @@ Revoke a proof (GDPR deletion, fraud, etc).
   "verification_id": "507f1f77bcf86cd799439011",
   "status": "revoked",
   "revoked_at": "2026-02-04T12:00:00Z"
+}
+```
+
+---
+
+## Webhook Deliveries
+
+Monitor and manage webhook deliveries for your account. Webhooks are sent when verification requests complete, partially complete, or expire.
+
+### List Webhook Deliveries
+
+`GET /api/v1/webhook-deliveries`
+
+Query parameters: `page`, `limit` (max 100), `status` (`pending`, `delivered`, `failed`), `event_type`, `verification_request_id`
+
+#### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "507f1f77bcf86cd799439011",
+      "verification_request_id": "507f1f77bcf86cd799439012",
+      "event_type": "verification_request.completed",
+      "url": "https://yourapp.com/webhook",
+      "status": "delivered",
+      "attempts": 1,
+      "max_attempts": 3,
+      "response_status": 200,
+      "created_at": "2026-02-13T12:00:00Z",
+      "updated_at": "2026-02-13T12:00:01Z"
+    }
+  ],
+  "pagination": { "hasMore": false }
+}
+```
+
+### Get Webhook Delivery
+
+`GET /api/v1/webhook-deliveries/:id`
+
+Returns full delivery details including request payload and response body.
+
+### Get Delivery Statistics
+
+`GET /api/v1/webhook-deliveries/stats`
+
+```json
+{
+  "total": 150,
+  "delivered": 142,
+  "failed": 5,
+  "pending": 3,
+  "success_rate": 94.67
+}
+```
+
+### Retry Failed Delivery
+
+`POST /api/v1/webhook-deliveries/:id/retry`
+
+Retry a failed webhook delivery. Only available for deliveries with status `failed`.
+
+### Webhook Event Types
+
+| Event | Description |
+|-------|-------------|
+| `verification_request.completed` | All required assets verified |
+| `verification_request.partial` | Some assets verified (when `partial_ok` is true) |
+| `verification_request.expired` | Request expired before completion |
+| `verification.completed` | Individual verification completed |
+
+### Webhook Signature
+
+Webhooks include an HMAC-SHA256 signature in the `X-Proof-Signature` header. Verify this against your webhook secret to ensure authenticity.
+
+```javascript
+const crypto = require('crypto');
+
+function verifyWebhook(payload, signature, secret) {
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expected)
+  );
 }
 ```
 
