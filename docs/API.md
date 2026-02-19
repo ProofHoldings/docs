@@ -16,6 +16,8 @@ Authorization: Bearer pk_live_your_api_key_here
 
 API keys are prefixed with `pk_live_` for production and `pk_test_` for testing.
 
+> **Machine-readable spec:** The full OpenAPI 3.0 specification is available at [`/api/openapi.json`](https://api.proof.holdings/api/openapi.json) for SDK generation, contract testing, and AI coding assistants.
+
 ---
 
 ## Endpoints Overview

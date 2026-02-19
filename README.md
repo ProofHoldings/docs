@@ -110,7 +110,7 @@ curl https://api.proof.holdings/.well-known/jwks.json
 | [**THREAT_MODEL.md**](docs/THREAT_MODEL.md) | Security guarantees and non-goals |
 | [**COMPARISON.md**](docs/COMPARISON.md) | vs SMS OTP, TOTP, WebAuthn |
 | [**PRICING.md**](docs/PRICING.md) | Pricing tiers |
-| [**openapi.json**](docs/openapi.json) | OpenAPI 3.0 spec for SDK generation |
+| [**openapi.json**](docs/openapi.json) | OpenAPI 3.0 spec ([live](https://api.proof.holdings/api/openapi.json)) |
 | [**test-vectors.json**](docs/test-vectors.json) | Golden test cases for SDK authors |
 
 ---
