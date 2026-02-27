@@ -82,6 +82,24 @@
       "lastUpdated": "2026-02-05",
       "status": "current",
       "order": 9
+    },
+    {
+      "slug": "mcp",
+      "file": "docs/MCP.md",
+      "title": "MCP Server",
+      "description": "118 tools for AI agents via Model Context Protocol",
+      "lastUpdated": "2026-02-27",
+      "status": "current",
+      "order": 10
+    },
+    {
+      "slug": "integrations",
+      "file": "docs/INTEGRATIONS.md",
+      "title": "Integrations",
+      "description": "Zapier, n8n, and Make.com",
+      "lastUpdated": "2026-02-27",
+      "status": "current",
+      "order": 11
     }
   ]
 }
