@@ -10,9 +10,9 @@ Install an official SDK to start verifying assets in minutes. All SDKs provide t
 
 | Language | Package | Install |
 |----------|---------|---------|
-| JavaScript/TypeScript | `@proof/sdk` | `npm install @proof/sdk` |
-| Python | `proof-sdk` | `pip install proof-sdk` |
-| PHP | `proof/sdk` | `composer require proof/sdk` |
+| JavaScript/TypeScript | `@proof-holdings/sdk` | `npm install @proof-holdings/sdk` |
+| Python | `proof-holdings` | `pip install proof-holdings` |
+| PHP | `proof-holdings/sdk` | `composer require proof-holdings/sdk` |
 | Go | `github.com/ProofHoldings/sdk-go` | `go get github.com/ProofHoldings/sdk-go` |
 
 ---
@@ -22,7 +22,7 @@ Install an official SDK to start verifying assets in minutes. All SDKs provide t
 ### JavaScript / TypeScript
 
 ```typescript
-import { Proof } from '@proof/sdk';
+import { Proof } from '@proof-holdings/sdk';
 
 const proof = new Proof('pk_live_your_key');
 
@@ -69,7 +69,7 @@ asyncio.run(main())
 ### PHP
 
 ```php
-use Proof\Proof;
+use ProofHoldings\Proof;
 
 $proof = new Proof('pk_live_your_key');
 
@@ -314,7 +314,7 @@ All SDKs throw typed errors that map to HTTP status codes. Every error includes 
 ### JavaScript
 
 ```typescript
-import { ValidationError, NotFoundError } from '@proof/sdk';
+import { ValidationError, NotFoundError } from '@proof-holdings/sdk';
 
 try {
   await proof.verifications.retrieve('invalid_id');
@@ -343,8 +343,8 @@ except ValidationError as e:
 ### PHP
 
 ```php
-use Proof\Exceptions\NotFoundException;
-use Proof\Exceptions\ValidationException;
+use ProofHoldings\Exceptions\NotFoundException;
+use ProofHoldings\Exceptions\ValidationException;
 
 try {
     $proof->verifications->retrieve('invalid_id');

@@ -180,7 +180,7 @@ If no `validity_requirement` is set, any non-expired proof can be reused.
 ## Integration Example
 
 ```typescript
-import { Proof } from '@proof/sdk';
+import { Proof } from '@proof-holdings/sdk';
 
 const proof = new Proof('pk_live_your_key');
 

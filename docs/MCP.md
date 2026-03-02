@@ -11,13 +11,13 @@ The proof.holdings MCP (Model Context Protocol) server exposes 118 tools for AI 
 ## Installation
 
 ```bash
-npm install -g @proof/mcp-server
+npm install -g @proof-holdings/mcp-server
 ```
 
 Or run directly without installing:
 
 ```bash
-npx @proof/mcp-server
+npx @proof-holdings/mcp-server
 ```
 
 ## Configuration
@@ -35,7 +35,7 @@ Add the following to your MCP client config file:
   "mcpServers": {
     "proof-holdings": {
       "command": "npx",
-      "args": ["-y", "@proof/mcp-server"],
+      "args": ["-y", "@proof-holdings/mcp-server"],
       "env": {
         "PROOF_API_KEY": "pk_live_your_key_here"
       }
